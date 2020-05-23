@@ -3,25 +3,26 @@
   <EntityContainer Name="ShopMVCEntities" annotation:LazyLoadingEnabled="true">
     <EntitySet Name="admins" EntityType="ShopMVCModel.admin" />
     <EntitySet Name="Categories" EntityType="ShopMVCModel.Category" />
+    <EntitySet Name="Customers" EntityType="ShopMVCModel.Customer" />
     <EntitySet Name="Orders" EntityType="ShopMVCModel.Order" />
     <EntitySet Name="OrdersDetails" EntityType="ShopMVCModel.OrdersDetail" />
     <EntitySet Name="Products" EntityType="ShopMVCModel.Product" />
-    <AssociationSet Name="FK_Product_Product" Association="ShopMVCModel.FK_Product_Product">
+    <EntitySet Name="sysdiagrams" EntityType="ShopMVCModel.sysdiagram" />
+    <AssociationSet Name="FK_Product_Category" Association="ShopMVCModel.FK_Product_Category">
       <End Role="Category" EntitySet="Categories" />
       <End Role="Product" EntitySet="Products" />
+    </AssociationSet>
+    <AssociationSet Name="FK_Orders_Customer" Association="ShopMVCModel.FK_Orders_Customer">
+      <End Role="Customer" EntitySet="Customers" />
+      <End Role="Order" EntitySet="Orders" />
     </AssociationSet>
     <AssociationSet Name="FK_OrdersDetail_Orders" Association="ShopMVCModel.FK_OrdersDetail_Orders">
       <End Role="Order" EntitySet="Orders" />
       <End Role="OrdersDetail" EntitySet="OrdersDetails" />
     </AssociationSet>
-    <AssociationSet Name="FK_OrdersDetail_Product1" Association="ShopMVCModel.FK_OrdersDetail_Product1">
+    <AssociationSet Name="FK_OrdersDetail_Product" Association="ShopMVCModel.FK_OrdersDetail_Product">
       <End Role="Product" EntitySet="Products" />
       <End Role="OrdersDetail" EntitySet="OrdersDetails" />
-    </AssociationSet>
-    <EntitySet Name="Customers" EntityType="ShopMVCModel.Customer" />
-    <AssociationSet Name="FK_Orders_Customer" Association="ShopMVCModel.FK_Orders_Customer">
-      <End Role="Customer" EntitySet="Customers" />
-      <End Role="Order" EntitySet="Orders" />
     </AssociationSet>
   </EntityContainer>
   <EntityType Name="admin">
@@ -39,7 +40,17 @@
     <Property Name="CategoryID" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
     <Property Name="CategoryName" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
     <Property Name="Description" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
-    <NavigationProperty Name="Product" Relationship="ShopMVCModel.FK_Product_Product" FromRole="Category" ToRole="Product" />
+    <NavigationProperty Name="Products" Relationship="ShopMVCModel.FK_Product_Category" FromRole="Category" ToRole="Product" />
+  </EntityType>
+  <EntityType Name="Customer">
+    <Key>
+      <PropertyRef Name="CustomerID" />
+    </Key>
+    <Property Name="CustomerID" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+    <Property Name="Name" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+    <Property Name="Address" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+    <Property Name="Phone" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+    <NavigationProperty Name="Orders" Relationship="ShopMVCModel.FK_Orders_Customer" FromRole="Customer" ToRole="Order" />
   </EntityType>
   <EntityType Name="Order">
     <Key>
@@ -48,9 +59,9 @@
     <Property Name="OrderID" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
     <Property Name="TongTien" Type="String" MaxLength="10" FixedLength="true" Unicode="true" />
     <Property Name="OderDescription" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
-    <NavigationProperty Name="OrdersDetails" Relationship="ShopMVCModel.FK_OrdersDetail_Orders" FromRole="Order" ToRole="OrdersDetail" />
     <Property Name="CustomerID" Type="Int32" />
     <NavigationProperty Name="Customer" Relationship="ShopMVCModel.FK_Orders_Customer" FromRole="Order" ToRole="Customer" />
+    <NavigationProperty Name="OrdersDetails" Relationship="ShopMVCModel.FK_OrdersDetail_Orders" FromRole="Order" ToRole="OrdersDetail" />
   </EntityType>
   <EntityType Name="OrdersDetail">
     <Key>
@@ -61,9 +72,9 @@
     <Property Name="OrderID" Type="Int32" Nullable="false" />
     <Property Name="Quantity" Type="Int32" />
     <Property Name="Price" Type="Decimal" Precision="19" Scale="4" />
-    <Property Name="ProductID" Type="Int32" />
+    <Property Name="ProductID" Type="Int32" Nullable="false" />
     <NavigationProperty Name="Order" Relationship="ShopMVCModel.FK_OrdersDetail_Orders" FromRole="OrdersDetail" ToRole="Order" />
-    <NavigationProperty Name="Product" Relationship="ShopMVCModel.FK_OrdersDetail_Product1" FromRole="OrdersDetail" ToRole="Product" />
+    <NavigationProperty Name="Product" Relationship="ShopMVCModel.FK_OrdersDetail_Product" FromRole="OrdersDetail" ToRole="Product" />
   </EntityType>
   <EntityType Name="Product">
     <Key>
@@ -73,19 +84,41 @@
     <Property Name="ProductName" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
     <Property Name="UnitPrice" Type="Decimal" Precision="19" Scale="4" />
     <Property Name="InStock" Type="Int32" />
-    <Property Name="CategoryID" Type="Int32" />
-    <NavigationProperty Name="Category" Relationship="ShopMVCModel.FK_Product_Product" FromRole="Product" ToRole="Category" />
-    <NavigationProperty Name="OrdersDetails" Relationship="ShopMVCModel.FK_OrdersDetail_Product1" FromRole="Product" ToRole="OrdersDetail" />
+    <Property Name="CategoryID" Type="Int32" Nullable="false" />
+    <NavigationProperty Name="Category" Relationship="ShopMVCModel.FK_Product_Category" FromRole="Product" ToRole="Category" />
+    <NavigationProperty Name="OrdersDetails" Relationship="ShopMVCModel.FK_OrdersDetail_Product" FromRole="Product" ToRole="OrdersDetail" />
   </EntityType>
-  <Association Name="FK_Product_Product">
+  <EntityType Name="sysdiagram">
+    <Key>
+      <PropertyRef Name="diagram_id" />
+    </Key>
+    <Property Name="name" Type="String" Nullable="false" MaxLength="128" FixedLength="false" Unicode="true" />
+    <Property Name="principal_id" Type="Int32" Nullable="false" />
+    <Property Name="diagram_id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+    <Property Name="version" Type="Int32" />
+    <Property Name="definition" Type="Binary" MaxLength="Max" FixedLength="false" />
+  </EntityType>
+  <Association Name="FK_Product_Category">
     <End Type="ShopMVCModel.Category" Role="Category" Multiplicity="1" />
-    <End Type="ShopMVCModel.Product" Role="Product" Multiplicity="0..1" />
+    <End Type="ShopMVCModel.Product" Role="Product" Multiplicity="*" />
     <ReferentialConstraint>
       <Principal Role="Category">
         <PropertyRef Name="CategoryID" />
       </Principal>
       <Dependent Role="Product">
-        <PropertyRef Name="ProductID" />
+        <PropertyRef Name="CategoryID" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK_Orders_Customer">
+    <End Type="ShopMVCModel.Customer" Role="Customer" Multiplicity="0..1" />
+    <End Type="ShopMVCModel.Order" Role="Order" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="Customer">
+        <PropertyRef Name="CustomerID" />
+      </Principal>
+      <Dependent Role="Order">
+        <PropertyRef Name="CustomerID" />
       </Dependent>
     </ReferentialConstraint>
   </Association>
@@ -101,8 +134,8 @@
       </Dependent>
     </ReferentialConstraint>
   </Association>
-  <Association Name="FK_OrdersDetail_Product1">
-    <End Type="ShopMVCModel.Product" Role="Product" Multiplicity="0..1" />
+  <Association Name="FK_OrdersDetail_Product">
+    <End Type="ShopMVCModel.Product" Role="Product" Multiplicity="1" />
     <End Type="ShopMVCModel.OrdersDetail" Role="OrdersDetail" Multiplicity="*" />
     <ReferentialConstraint>
       <Principal Role="Product">
@@ -110,28 +143,6 @@
       </Principal>
       <Dependent Role="OrdersDetail">
         <PropertyRef Name="ProductID" />
-      </Dependent>
-    </ReferentialConstraint>
-  </Association>
-  <EntityType Name="Customer">
-    <Key>
-      <PropertyRef Name="CustomerID" />
-    </Key>
-    <Property Name="CustomerID" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
-    <Property Name="Name" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
-    <Property Name="Address" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
-    <Property Name="Phone" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
-    <NavigationProperty Name="Orders" Relationship="ShopMVCModel.FK_Orders_Customer" FromRole="Customer" ToRole="Order" />
-  </EntityType>
-  <Association Name="FK_Orders_Customer">
-    <End Type="ShopMVCModel.Customer" Role="Customer" Multiplicity="0..1" />
-    <End Type="ShopMVCModel.Order" Role="Order" Multiplicity="*" />
-    <ReferentialConstraint>
-      <Principal Role="Customer">
-        <PropertyRef Name="CustomerID" />
-      </Principal>
-      <Dependent Role="Order">
-        <PropertyRef Name="CustomerID" />
       </Dependent>
     </ReferentialConstraint>
   </Association>

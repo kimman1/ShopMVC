@@ -312,3 +312,4 @@ C:\Users\KimMan\Desktop\ShopMVC\ShopMVC\Shop\Shop\obj\Debug\Shop.csproj.CoreComp
 C:\Users\KimMan\Desktop\ShopMVC\ShopMVC\Shop\Shop\obj\Debug\Shop.csproj.CopyComplete
 C:\Users\KimMan\Desktop\ShopMVC\ShopMVC\Shop\Shop\obj\Debug\Shop.dll
 C:\Users\KimMan\Desktop\ShopMVC\ShopMVC\Shop\Shop\obj\Debug\Shop.pdb
+C:\Users\KimMan\Desktop\ShopMVC\ShopMVC\Shop\Shop\obj\Debug\Shop.csprojAssemblyReference.cache

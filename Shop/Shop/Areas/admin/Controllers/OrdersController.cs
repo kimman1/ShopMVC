@@ -182,6 +182,7 @@ namespace Shop.Areas.admin.Controllers
                 odetails.OrderID = id;
                 odetails.Quantity = orderViewModel.Quantity;
                 odetails.ProductID = product_id;
+                odetails.Price = decimal.Parse(orderViewModel.Price) ;
                // odetails.Price =(decimal.Parse(orderViewModel.Price));
                 db.OrdersDetails.Add(odetails);
                 db.SaveChanges();

@@ -25,8 +25,8 @@ namespace Shop
         public string OderDescription { get; set; }
         public Nullable<int> CustomerID { get; set; }
     
+        public virtual Customer Customer { get; set; }
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<OrdersDetail> OrdersDetails { get; set; }
-        public virtual Customer Customer { get; set; }
     }
 }
