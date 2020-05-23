@@ -178,6 +178,8 @@
     <Compile Include="Areas\admin\Controllers\CategoriesController.cs" />
     <Compile Include="Areas\admin\Controllers\OrdersController.cs" />
     <Compile Include="Areas\admin\Controllers\ProductsController.cs" />
+    <Compile Include="Areas\admin\ViewModel\OrderViewModel.cs" />
+    <Compile Include="Areas\admin\ViewModel\ProductViewModel.cs" />
     <Compile Include="Category.cs">
       <DependentUpon>DBModel.tt</DependentUpon>
     </Compile>
@@ -251,21 +253,22 @@
     </Content>
     <Content Include="Areas\admin\Views\web.config" />
     <Content Include="Areas\admin\Views\Administrator\Login.cshtml" />
-    <Content Include="Areas\admin\Views\Products\Create.cshtml" />
-    <Content Include="Areas\admin\Views\Products\Delete.cshtml" />
-    <Content Include="Areas\admin\Views\Products\Details.cshtml" />
-    <Content Include="Areas\admin\Views\Products\Edit.cshtml" />
-    <Content Include="Areas\admin\Views\Products\Index.cshtml" />
     <Content Include="Areas\admin\Views\Categories\Create.cshtml" />
     <Content Include="Areas\admin\Views\Categories\Delete.cshtml" />
     <Content Include="Areas\admin\Views\Categories\Details.cshtml" />
     <Content Include="Areas\admin\Views\Categories\Edit.cshtml" />
     <Content Include="Areas\admin\Views\Categories\Index.cshtml" />
-    <Content Include="Areas\admin\Views\Orders\Create.cshtml" />
     <Content Include="Areas\admin\Views\Orders\Delete.cshtml" />
-    <Content Include="Areas\admin\Views\Orders\Details.cshtml" />
-    <Content Include="Areas\admin\Views\Orders\Edit.cshtml" />
     <Content Include="Areas\admin\Views\Orders\Index.cshtml" />
+    <Content Include="Areas\admin\Views\Orders\Details.cshtml" />
+    <Content Include="Areas\admin\Views\Orders\Create.cshtml" />
+    <Content Include="Areas\admin\Views\Orders\Edit.cshtml" />
+    <Content Include="Areas\admin\Views\Orders\CreateOrderDetail.cshtml" />
+    <Content Include="Areas\admin\Views\Products\Create.cshtml" />
+    <Content Include="Areas\admin\Views\Products\Delete.cshtml" />
+    <Content Include="Areas\admin\Views\Products\Details.cshtml" />
+    <Content Include="Areas\admin\Views\Products\Edit.cshtml" />
+    <Content Include="Areas\admin\Views\Products\Index.cshtml" />
     <None Include="Scripts\jquery-3.3.1.intellisense.js" />
     <Content Include="Scripts\jquery-3.3.1.js" />
     <Content Include="Scripts\jquery-3.3.1.min.js" />

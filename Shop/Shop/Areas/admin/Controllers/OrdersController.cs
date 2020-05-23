@@ -6,7 +6,9 @@ using System.Linq;
 using System.Net;
 using System.Web;
 using System.Web.Mvc;
+using System.Web.UI.WebControls;
 using Shop;
+using Shop.Areas.admin.ViewModel;
 
 namespace Shop.Areas.admin.Controllers
 {
@@ -21,23 +23,47 @@ namespace Shop.Areas.admin.Controllers
         }
 
         // GET: admin/Orders/Details/5
+        /* public ActionResult Details(int? id)
+         {
+             if (id == null)
+             {
+                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
+             }
+             Order order = db.Orders.Find(id);
+             if (order == null)
+             {
+                 return HttpNotFound();
+             }
+             return View(order);
+         }*/
         public ActionResult Details(int? id)
         {
-            if (id == null)
+            List<OrdersDetail> p = db.OrdersDetails.Where(m => m.OrderID == id).ToList();
+            List<OrderViewModel> viewmodel = new List<OrderViewModel>();
+
+
+            foreach (OrdersDetail odd in p)
             {
-                return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
+                OrderViewModel od = new OrderViewModel();
+                od.OrderDetailsID = odd.OrdersDetailID;
+                od.OrderID = odd.OrderID;
+                od.Price = odd.Price.ToString(); ;
+                od.Product = odd.Product;
+                od.Quantity = (int)odd.Quantity;
+                viewmodel.Add(od);
             }
-            Order order = db.Orders.Find(id);
-            if (order == null)
-            {
-                return HttpNotFound();
-            }
-            return View(order);
+            return View(viewmodel);
         }
 
         // GET: admin/Orders/Create
         public ActionResult Create()
         {
+            /* var p = db.Products.Select(s => s).ToList();
+             OrderViewModel ovm = new OrderViewModel();
+             ovm.productIDList = p;*/
+            List<Customer> listCustomer = db.Customers.ToList();
+            SelectList customerlist = new SelectList(listCustomer,"CustomerID","Name");
+            ViewBag.CustomerList = customerlist;
             return View();
         }
 
@@ -46,10 +72,12 @@ namespace Shop.Areas.admin.Controllers
         // more details see https://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Create([Bind(Include = "OrderID,TongTien,OderDescription")] Order order)
+        public ActionResult Create(Order order, FormCollection fc)
         {
             if (ModelState.IsValid)
             {
+                string dropdownID = fc["DropDownCustomer"].ToString();
+                order.CustomerID = int.Parse(dropdownID);
                 db.Orders.Add(order);
                 db.SaveChanges();
                 return RedirectToAction("Index");
@@ -57,7 +85,24 @@ namespace Shop.Areas.admin.Controllers
 
             return View(order);
         }
-
+        /*
+        public ActionResult Create(OrderViewModel ovm, int cusID, int id)
+        {
+            OrdersDetail oDetails = new OrdersDetail();
+            oDetails.OrderID = id;
+            oDetails.Quantity = ovm.Quantity;
+            oDetails.Price =  decimal.Parse(ovm.Price);
+            oDetails.ProductID = ovm.Product.ProductID;
+            Order order = new Order();
+            order.CustomerID = cusID;
+            db.Orders.Add(order);
+            db.SaveChanges();
+            db.OrdersDetails.Add(oDetails);
+            db.SaveChanges();
+            // order.CustomerID = ovm.
+            return View();
+        }
+        */
         // GET: admin/Orders/Edit/5
         public ActionResult Edit(int? id)
         {
@@ -66,6 +111,9 @@ namespace Shop.Areas.admin.Controllers
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
             Order order = db.Orders.Find(id);
+            List<Customer> listCustomer = db.Customers.ToList();
+            SelectList customerlist = new SelectList(listCustomer, "CustomerID", "Name");
+            ViewBag.CustomerList = customerlist;
             if (order == null)
             {
                 return HttpNotFound();
@@ -78,10 +126,12 @@ namespace Shop.Areas.admin.Controllers
         // more details see https://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Edit([Bind(Include = "OrderID,TongTien,OderDescription")] Order order)
+        public ActionResult Edit( Order order, FormCollection fc)
         {
             if (ModelState.IsValid)
             {
+                string dropdownvalue = fc["CustomerID"].ToString();
+                order.CustomerID = int.Parse(dropdownvalue);
                 db.Entry(order).State = EntityState.Modified;
                 db.SaveChanges();
                 return RedirectToAction("Index");
@@ -114,7 +164,31 @@ namespace Shop.Areas.admin.Controllers
             db.SaveChanges();
             return RedirectToAction("Index");
         }
+        public ActionResult CreateOrderDetail()
+        {
+            List<Product> Proc = db.Products.ToList();
+            SelectList ProcList = new SelectList(Proc, "ProductID", "ProductName");
+            ViewBag.procList = ProcList;
+            return View();
+        }
+        [HttpPost]
+        public ActionResult CreateOrderDetail(OrderViewModel orderViewModel, FormCollection fc, int id)
+        {
 
+            if (ModelState.IsValid)
+            {
+                int product_id = int.Parse(fc["ProductID"].ToString());
+                OrdersDetail odetails = new OrdersDetail();
+                odetails.OrderID = id;
+                odetails.Quantity = orderViewModel.Quantity;
+                odetails.ProductID = product_id;
+               // odetails.Price =(decimal.Parse(orderViewModel.Price));
+                db.OrdersDetails.Add(odetails);
+                db.SaveChanges();
+                return RedirectToAction("Index");
+            }
+            return View();
+        }
         protected override void Dispose(bool disposing)
         {
             if (disposing)

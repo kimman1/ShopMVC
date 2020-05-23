@@ -1,4 +1,4 @@
-﻿@model IEnumerable<Shop.Product>
+﻿@model IEnumerable<Shop.Areas.admin.ViewModel.ProductViewModel>
 
 @{
     ViewBag.Title = "Index";
@@ -13,9 +13,6 @@
 <table class="table">
     <tr>
         <th>
-            @Html.DisplayNameFor(model => model.Category.CategoryName)
-        </th>
-        <th>
             @Html.DisplayNameFor(model => model.ProductName)
         </th>
         <th>
@@ -24,14 +21,17 @@
         <th>
             @Html.DisplayNameFor(model => model.InStock)
         </th>
+        <th>
+            @Html.DisplayNameFor(model => model.CategoryID)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.category.CategoryName)
+        </th>
         <th></th>
     </tr>
 
 @foreach (var item in Model) {
     <tr>
-        <td>
-            @Html.DisplayFor(modelItem => item.Category.CategoryName)
-        </td>
         <td>
             @Html.DisplayFor(modelItem => item.ProductName)
         </td>
@@ -40,6 +40,12 @@
         </td>
         <td>
             @Html.DisplayFor(modelItem => item.InStock)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.CategoryID)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.category.CategoryName)
         </td>
         <td>
             @Html.ActionLink("Edit", "Edit", new { id=item.ProductID }) |

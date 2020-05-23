@@ -1,4 +1,4 @@
-﻿@model Shop.Product
+﻿@model Shop.Areas.admin.ViewModel.ProductViewModel
 
 @{
     ViewBag.Title = "Edit";
@@ -42,10 +42,10 @@
         </div>
 
         <div class="form-group">
-            @Html.LabelFor(model => model.CategoryID, "CategoryID", htmlAttributes: new { @class = "control-label col-md-2" })
+            @Html.LabelFor(model => model.category.CategoryName, "Product Name", htmlAttributes: new { @class = "control-label col-md-2" })
             <div class="col-md-10">
-                @Html.DropDownList("CategoryID", null, htmlAttributes: new { @class = "form-control" })
-                @Html.ValidationMessageFor(model => model.CategoryID, "", new { @class = "text-danger" })
+                @Html.DropDownList("DropDownCate", (IEnumerable<SelectListItem>)ViewBag.cateList, htmlAttributes: new { @class = "form-control" })
+                @Html.ValidationMessageFor(model => model.category.CategoryName, "", new { @class = "text-danger" })
             </div>
         </div>
 

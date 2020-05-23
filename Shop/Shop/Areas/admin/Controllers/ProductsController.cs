@@ -7,7 +7,7 @@ using System.Net;
 using System.Web;
 using System.Web.Mvc;
 using Shop;
-using Shop.Models;
+using Shop.Areas.admin.ViewModel;
 
 namespace Shop.Areas.admin.Controllers
 {
@@ -18,8 +18,20 @@ namespace Shop.Areas.admin.Controllers
         // GET: admin/Products
         public ActionResult Index()
         {
-            var products = db.Products.Include(p => p.Category);
-            return View(products.ToList());
+            var p = db.Products.Select(s => s);
+            List<ProductViewModel> productViewModels = new List<ProductViewModel>();
+            foreach (Product product in p)
+            {
+                ProductViewModel pvm = new ProductViewModel();
+                pvm.CategoryID = (int)product.CategoryID;
+                pvm.InStock = (int)product.InStock;
+                pvm.ProductID = product.ProductID;
+                pvm.ProductName = product.ProductName;
+                pvm.UnitPrice = (int)product.UnitPrice;
+                pvm.category = db.Categories.Where(s => s.CategoryID == product.CategoryID).FirstOrDefault();
+                productViewModels.Add(pvm);
+            }
+            return View(productViewModels);
         }
 
         // GET: admin/Products/Details/5
@@ -30,17 +42,27 @@ namespace Shop.Areas.admin.Controllers
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
             Product product = db.Products.Find(id);
+            ProductViewModel pvm = new ProductViewModel();
+            pvm.CategoryID = (int) product.CategoryID;
+            pvm.category = db.Categories.Where(s => s.CategoryID == product.CategoryID).FirstOrDefault();
+            pvm.InStock = (int) product.InStock;
+            pvm.ProductID = product.ProductID;
+            pvm.ProductName = product.ProductName;
+            pvm.UnitPrice = (int) product.UnitPrice;
             if (product == null)
             {
                 return HttpNotFound();
             }
-            return View(product);
+            return View(pvm);
         }
 
         // GET: admin/Products/Create
         public ActionResult Create()
         {
-            ViewBag.CategoryID = new SelectList(db.Categories, "CategoryID", "CategoryName");
+            //ViewBag.ProductID = new SelectList(db.Categories, "CategoryID", "CategoryName");
+            List<Category> listcate = db.Categories.ToList();
+            SelectList catelist = new SelectList(listcate, "CategoryID", "CategoryName");
+            ViewBag.CatList = catelist;
             return View();
         }
 
@@ -49,16 +71,23 @@ namespace Shop.Areas.admin.Controllers
         // more details see https://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Create([Bind(Include = "ProductID,ProductName,UnitPrice,InStock,CategoryID")] Product product)
+        public ActionResult Create(Product product, FormCollection fc)
         {
+            int catID = int.Parse(fc["CateNameDrop"].ToString());
             if (ModelState.IsValid)
             {
-                db.Products.Add(product);
+                //product.CategoryID = catID;
+                Product p = new Product();
+                p.ProductName = product.ProductName;
+                p.UnitPrice = product.UnitPrice;
+                p.InStock = product.InStock;
+                p.CategoryID = catID;
+                db.Products.Add(p);
                 db.SaveChanges();
                 return RedirectToAction("Index");
             }
-
-            ViewBag.CategoryID = new SelectList(db.Categories, "CategoryID", "CategoryName", product.CategoryID);
+           
+            //ViewBag.ProductID = new SelectList(db.Categories, "CategoryID", "CategoryName", product.ProductID);
             return View(product);
         }
 
@@ -70,12 +99,22 @@ namespace Shop.Areas.admin.Controllers
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
             Product product = db.Products.Find(id);
+            ProductViewModel pvm = new ProductViewModel();
+            pvm.CategoryID = (int)product.CategoryID;
+            pvm.category = db.Categories.Where(s => s.CategoryID == product.CategoryID).FirstOrDefault();
+            pvm.InStock = (int)product.InStock;
+            pvm.ProductID = product.ProductID;
+            pvm.ProductName = product.ProductName;
+            pvm.UnitPrice = (int)product.UnitPrice;
+            List<Category> listcate = db.Categories.ToList();
+            SelectList catelist = new SelectList(listcate, "CategoryID", "CategoryName");
+            ViewBag.CateList = catelist;
             if (product == null)
             {
                 return HttpNotFound();
             }
-            ViewBag.CategoryID = new SelectList(db.Categories, "CategoryID", "CategoryName", product.CategoryID);
-            return View(product);
+            //ViewBag.ProductID = new SelectList(db.Categories, "CategoryID", "CategoryName", product.ProductID);
+            return View(pvm);
         }
 
         // POST: admin/Products/Edit/5
@@ -83,15 +122,16 @@ namespace Shop.Areas.admin.Controllers
         // more details see https://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Edit([Bind(Include = "ProductID,ProductName,UnitPrice,InStock,CategoryID")] Product product)
+        public ActionResult Edit(Product product, FormCollection fc)
         {
             if (ModelState.IsValid)
             {
+                string dropdrowID = fc["DropDownCate"].ToString();
+                product.CategoryID = int.Parse(dropdrowID);
                 db.Entry(product).State = EntityState.Modified;
                 db.SaveChanges();
                 return RedirectToAction("Index");
             }
-            ViewBag.CategoryID = new SelectList(db.Categories, "CategoryID", "CategoryName", product.CategoryID);
             return View(product);
         }
 
