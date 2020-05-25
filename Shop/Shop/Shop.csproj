@@ -176,6 +176,7 @@
     <Compile Include="Areas\admin\adminAreaRegistration.cs" />
     <Compile Include="Areas\admin\Controllers\AdministratorController.cs" />
     <Compile Include="Areas\admin\Controllers\CategoriesController.cs" />
+    <Compile Include="Areas\admin\Controllers\CustomersController.cs" />
     <Compile Include="Areas\admin\Controllers\OrdersController.cs" />
     <Compile Include="Areas\admin\Controllers\ProductsController.cs" />
     <Compile Include="Areas\admin\ViewModel\OrderViewModel.cs" />
@@ -272,6 +273,11 @@
     <Content Include="Areas\admin\Views\Products\Details.cshtml" />
     <Content Include="Areas\admin\Views\Products\Edit.cshtml" />
     <Content Include="Areas\admin\Views\Products\Index.cshtml" />
+    <Content Include="Areas\admin\Views\Customers\Create.cshtml" />
+    <Content Include="Areas\admin\Views\Customers\Delete.cshtml" />
+    <Content Include="Areas\admin\Views\Customers\Details.cshtml" />
+    <Content Include="Areas\admin\Views\Customers\Edit.cshtml" />
+    <Content Include="Areas\admin\Views\Customers\Index.cshtml" />
     <None Include="Scripts\jquery-3.3.1.intellisense.js" />
     <Content Include="Scripts\jquery-3.3.1.js" />
     <Content Include="Scripts\jquery-3.3.1.min.js" />
