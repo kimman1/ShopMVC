@@ -35,7 +35,7 @@ namespace Shop.Areas.admin.Controllers
             }
             if (status == true)
             {
-                return RedirectToAction("Index", "Products");  
+                return RedirectToAction("Index", "Customers");  
             }
             else
             {

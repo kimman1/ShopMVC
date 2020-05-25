@@ -1,0 +1,29 @@
+﻿html, body {
+    height: 100%;
+    text-align:center;
+}
+
+ .bg-color {
+     width: 100%;
+    height: auto;
+    min-height: 100% !important;
+    background: #4e4376;
+    background: -webkit-linear-gradient(to bottom, #2b5876, #4e4376);
+    background: linear-gradient(to bottom, #2b5876, #4e4376);
+}
+
+body::after {
+    content: "";
+    /*background-image: url('https://ngs-it.com/files/course/Backgrounds_in_CSS.jpg');*/
+    opacity: 0.1;
+    top: 0;
+    left: 0;
+    bottom: 0;
+    right: 0;
+    position: absolute;
+    z-index: -1;
+    background-position: center;
+    background-repeat: no-repeat;
+    background-size: cover;
+}
+
