@@ -160,7 +160,18 @@ namespace Shop.Areas.admin.Controllers
             db.SaveChanges();
             return RedirectToAction("Index");
         }
-
+        public ActionResult RedirectToCategories()
+        {
+            return RedirectToAction("Index","Categories");
+        }
+        public ActionResult RedirectToCustomer()
+        {
+            return RedirectToAction("Index", "Customers");
+        }
+        public ActionResult RedirectToOrders()
+        {
+            return RedirectToAction("Index", "Orders");
+        }
         protected override void Dispose(bool disposing)
         {
             if (disposing)

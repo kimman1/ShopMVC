@@ -183,12 +183,23 @@ namespace Shop.Areas.admin.Controllers
                 odetails.Quantity = orderViewModel.Quantity;
                 odetails.ProductID = product_id;
                 odetails.Price = decimal.Parse(orderViewModel.Price) ;
-               // odetails.Price =(decimal.Parse(orderViewModel.Price));
                 db.OrdersDetails.Add(odetails);
                 db.SaveChanges();
                 return RedirectToAction("Index");
             }
             return View();
+        }
+        public ActionResult RedirectToCategories()
+        {
+            return RedirectToAction("Index","Categories");
+        }
+        public ActionResult RedirectToCustomer()
+        {
+            return RedirectToAction("Index", "Customers");
+        }
+        public ActionResult RedirectToProducts()
+        {
+            return RedirectToAction("Index", "Products");
         }
         protected override void Dispose(bool disposing)
         {

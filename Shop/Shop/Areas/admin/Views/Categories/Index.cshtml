@@ -5,7 +5,7 @@
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
 
-<h2>Index</h2>
+<h2>Categories</h2>
 
 <p>
     @Html.ActionLink("Create New", "Create")
@@ -38,3 +38,12 @@
 }
 
 </table>
+<span class="badge badge-success">
+    @Html.ActionLink("Customer","RedirectToCustomer",null ,new {@style = "color: white;font-size : 15px"})
+</span>
+<span class="badge badge-warning">
+    @Html.ActionLink("Order", "RedirectToOrder", null, new {@style = "color: white;font-size : 15px" })
+</span>
+<span class="badge">
+    @Html.ActionLink("Products", "RedirectToProduct", null, new { @style = "color: white;font-size : 15px" })
+</span>

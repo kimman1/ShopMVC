@@ -5,7 +5,7 @@
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
 
-<h2>Index</h2>
+<h2>Orders</h2>
 
 <p>
     @Html.ActionLink("Create New", "Create")
@@ -27,27 +27,37 @@
         <th></th>
     </tr>
 
-@foreach (var item in Model) {
-    <tr>
-        <td>
-            @Html.DisplayFor(modelItem => item.TongTien)
-        </td>
-        <td>
-            @Html.DisplayFor(modelItem => item.OderDescription)
-        </td>
-        <td>
-            @Html.DisplayFor(modelItem => item.Customer.Name)
-       </td>
-        <td>
-            @Html.DisplayFor(modelItem => item.Customer.CustomerID)
-        </td>
-        <td>
-            @Html.ActionLink("Edit", "Edit", new { id=item.OrderID }) |
-            @Html.ActionLink("Details", "Details", new { id=item.OrderID, customerid = item.CustomerID }) |
-            @Html.ActionLink("Delete", "Delete", new { id=item.OrderID })|
-            @Html.ActionLink("Create Order Detail","CreateOrderDetail",new {id=item.OrderID})
-        </td>
-    </tr>
-}
+    @foreach (var item in Model)
+    {
+        <tr>
+            <td>
+                @Html.DisplayFor(modelItem => item.TongTien)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.OderDescription)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Customer.Name)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Customer.CustomerID)
+            </td>
+            <td>
+                @Html.ActionLink("Edit", "Edit", new { id = item.OrderID }) |
+                @Html.ActionLink("Details", "Details", new { id = item.OrderID, customerid = item.CustomerID }) |
+                @Html.ActionLink("Delete", "Delete", new { id = item.OrderID })|
+                @Html.ActionLink("Create Order Detail", "CreateOrderDetail", new { id = item.OrderID })
+            </td>
+        </tr>
+    }
 
 </table>
+<span class="badge badge-success">
+    @Html.ActionLink("Categories", "RedirectToCategories", null, new { @style = "color: white;font-size : 15px" })
+</span>
+<span class="badge badge-warning">
+    @Html.ActionLink("Customer", "RedirectToCustomer", null, new { @style = "color: white;font-size : 15px" })
+</span>
+<span class="badge">
+    @Html.ActionLink("Products", "RedirectToProducts", null, new { @style = "color: white;font-size : 15px" })
+</span>

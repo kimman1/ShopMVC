@@ -124,7 +124,18 @@ namespace Shop.Areas.admin.Controllers
                 return RedirectToAction("Index");
 
         }
-
+        public ActionResult RedirectToOrders()
+        {
+            return RedirectToAction("Index","Orders");
+        }
+        public ActionResult RedirectToProducs()
+        {
+            return RedirectToAction("Index","Products");
+        }
+        public ActionResult redirectToCategories()
+        {
+            return RedirectToAction("Index", "Categories");
+        }
         protected override void Dispose(bool disposing)
         {
             if (disposing)
