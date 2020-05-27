@@ -24,6 +24,7 @@ namespace Shop
         public string TongTien { get; set; }
         public string OderDescription { get; set; }
         public Nullable<int> CustomerID { get; set; }
+        public Nullable<System.DateTime> OrderDate { get; set; }
     
         public virtual Customer Customer { get; set; }
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]

@@ -38,6 +38,7 @@
           <Property Name="TongTien" Type="nchar" MaxLength="10" />
           <Property Name="OderDescription" Type="nvarchar" MaxLength="50" />
           <Property Name="CustomerID" Type="int" />
+          <Property Name="OrderDate" Type="date" />
         </EntityType>
         <EntityType Name="OrdersDetail">
           <Key>
@@ -48,7 +49,7 @@
           <Property Name="OrderID" Type="int" Nullable="false" />
           <Property Name="Quantity" Type="int" />
           <Property Name="Price" Type="money" />
-          <Property Name="ProductID" Type="int" Nullable="false" />
+          <Property Name="ProductID" Type="int" />
         </EntityType>
         <EntityType Name="Product">
           <Key>
@@ -58,17 +59,7 @@
           <Property Name="ProductName" Type="nvarchar" MaxLength="50" />
           <Property Name="UnitPrice" Type="money" />
           <Property Name="InStock" Type="int" />
-          <Property Name="CategoryID" Type="int" Nullable="false" />
-        </EntityType>
-        <EntityType Name="sysdiagrams">
-          <Key>
-            <PropertyRef Name="diagram_id" />
-          </Key>
-          <Property Name="name" Type="nvarchar" MaxLength="128" Nullable="false" />
-          <Property Name="principal_id" Type="int" Nullable="false" />
-          <Property Name="diagram_id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
-          <Property Name="version" Type="int" />
-          <Property Name="definition" Type="varbinary(max)" />
+          <Property Name="CategoryID" Type="int" />
         </EntityType>
         <Association Name="FK_Orders_Customer">
           <End Role="Customer" Type="Self.Customer" Multiplicity="0..1" />
@@ -94,8 +85,8 @@
             </Dependent>
           </ReferentialConstraint>
         </Association>
-        <Association Name="FK_OrdersDetail_Product">
-          <End Role="Product" Type="Self.Product" Multiplicity="1" />
+        <Association Name="FK_OrdersDetail_Product1">
+          <End Role="Product" Type="Self.Product" Multiplicity="0..1" />
           <End Role="OrdersDetail" Type="Self.OrdersDetail" Multiplicity="*" />
           <ReferentialConstraint>
             <Principal Role="Product">
@@ -106,15 +97,15 @@
             </Dependent>
           </ReferentialConstraint>
         </Association>
-        <Association Name="FK_Product_Category">
+        <Association Name="FK_Product_Product">
           <End Role="Category" Type="Self.Category" Multiplicity="1" />
-          <End Role="Product" Type="Self.Product" Multiplicity="*" />
+          <End Role="Product" Type="Self.Product" Multiplicity="0..1" />
           <ReferentialConstraint>
             <Principal Role="Category">
               <PropertyRef Name="CategoryID" />
             </Principal>
             <Dependent Role="Product">
-              <PropertyRef Name="CategoryID" />
+              <PropertyRef Name="ProductID" />
             </Dependent>
           </ReferentialConstraint>
         </Association>
@@ -125,7 +116,6 @@
           <EntitySet Name="Orders" EntityType="Self.Orders" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="OrdersDetail" EntityType="Self.OrdersDetail" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="Product" EntityType="Self.Product" Schema="dbo" store:Type="Tables" />
-          <EntitySet Name="sysdiagrams" EntityType="Self.sysdiagrams" Schema="dbo" store:Type="Tables" />
           <AssociationSet Name="FK_Orders_Customer" Association="Self.FK_Orders_Customer">
             <End Role="Customer" EntitySet="Customer" />
             <End Role="Orders" EntitySet="Orders" />
@@ -134,11 +124,11 @@
             <End Role="Orders" EntitySet="Orders" />
             <End Role="OrdersDetail" EntitySet="OrdersDetail" />
           </AssociationSet>
-          <AssociationSet Name="FK_OrdersDetail_Product" Association="Self.FK_OrdersDetail_Product">
+          <AssociationSet Name="FK_OrdersDetail_Product1" Association="Self.FK_OrdersDetail_Product1">
             <End Role="Product" EntitySet="Product" />
             <End Role="OrdersDetail" EntitySet="OrdersDetail" />
           </AssociationSet>
-          <AssociationSet Name="FK_Product_Category" Association="Self.FK_Product_Category">
+          <AssociationSet Name="FK_Product_Product" Association="Self.FK_Product_Product">
             <End Role="Category" EntitySet="Category" />
             <End Role="Product" EntitySet="Product" />
           </AssociationSet>
@@ -154,8 +144,7 @@
           <EntitySet Name="Orders" EntityType="ShopMVCModel.Order" />
           <EntitySet Name="OrdersDetails" EntityType="ShopMVCModel.OrdersDetail" />
           <EntitySet Name="Products" EntityType="ShopMVCModel.Product" />
-          <EntitySet Name="sysdiagrams" EntityType="ShopMVCModel.sysdiagram" />
-          <AssociationSet Name="FK_Product_Category" Association="ShopMVCModel.FK_Product_Category">
+          <AssociationSet Name="FK_Product_Product" Association="ShopMVCModel.FK_Product_Product">
             <End Role="Category" EntitySet="Categories" />
             <End Role="Product" EntitySet="Products" />
           </AssociationSet>
@@ -167,7 +156,7 @@
             <End Role="Order" EntitySet="Orders" />
             <End Role="OrdersDetail" EntitySet="OrdersDetails" />
           </AssociationSet>
-          <AssociationSet Name="FK_OrdersDetail_Product" Association="ShopMVCModel.FK_OrdersDetail_Product">
+          <AssociationSet Name="FK_OrdersDetail_Product1" Association="ShopMVCModel.FK_OrdersDetail_Product1">
             <End Role="Product" EntitySet="Products" />
             <End Role="OrdersDetail" EntitySet="OrdersDetails" />
           </AssociationSet>
@@ -187,7 +176,7 @@
           <Property Name="CategoryID" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
           <Property Name="CategoryName" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
           <Property Name="Description" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
-          <NavigationProperty Name="Products" Relationship="ShopMVCModel.FK_Product_Category" FromRole="Category" ToRole="Product" />
+          <NavigationProperty Name="Product" Relationship="ShopMVCModel.FK_Product_Product" FromRole="Category" ToRole="Product" />
         </EntityType>
         <EntityType Name="Customer">
           <Key>
@@ -207,6 +196,7 @@
           <Property Name="TongTien" Type="String" MaxLength="10" FixedLength="true" Unicode="true" />
           <Property Name="OderDescription" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
           <Property Name="CustomerID" Type="Int32" />
+          <Property Name="OrderDate" Type="DateTime" Precision="0" />
           <NavigationProperty Name="Customer" Relationship="ShopMVCModel.FK_Orders_Customer" FromRole="Order" ToRole="Customer" />
           <NavigationProperty Name="OrdersDetails" Relationship="ShopMVCModel.FK_OrdersDetail_Orders" FromRole="Order" ToRole="OrdersDetail" />
         </EntityType>
@@ -219,9 +209,9 @@
           <Property Name="OrderID" Type="Int32" Nullable="false" />
           <Property Name="Quantity" Type="Int32" />
           <Property Name="Price" Type="Decimal" Precision="19" Scale="4" />
-          <Property Name="ProductID" Type="Int32" Nullable="false" />
+          <Property Name="ProductID" Type="Int32" />
           <NavigationProperty Name="Order" Relationship="ShopMVCModel.FK_OrdersDetail_Orders" FromRole="OrdersDetail" ToRole="Order" />
-          <NavigationProperty Name="Product" Relationship="ShopMVCModel.FK_OrdersDetail_Product" FromRole="OrdersDetail" ToRole="Product" />
+          <NavigationProperty Name="Product" Relationship="ShopMVCModel.FK_OrdersDetail_Product1" FromRole="OrdersDetail" ToRole="Product" />
         </EntityType>
         <EntityType Name="Product">
           <Key>
@@ -231,29 +221,19 @@
           <Property Name="ProductName" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
           <Property Name="UnitPrice" Type="Decimal" Precision="19" Scale="4" />
           <Property Name="InStock" Type="Int32" />
-          <Property Name="CategoryID" Type="Int32" Nullable="false" />
-          <NavigationProperty Name="Category" Relationship="ShopMVCModel.FK_Product_Category" FromRole="Product" ToRole="Category" />
-          <NavigationProperty Name="OrdersDetails" Relationship="ShopMVCModel.FK_OrdersDetail_Product" FromRole="Product" ToRole="OrdersDetail" />
+          <Property Name="CategoryID" Type="Int32" />
+          <NavigationProperty Name="Category" Relationship="ShopMVCModel.FK_Product_Product" FromRole="Product" ToRole="Category" />
+          <NavigationProperty Name="OrdersDetails" Relationship="ShopMVCModel.FK_OrdersDetail_Product1" FromRole="Product" ToRole="OrdersDetail" />
         </EntityType>
-        <EntityType Name="sysdiagram">
-          <Key>
-            <PropertyRef Name="diagram_id" />
-          </Key>
-          <Property Name="name" Type="String" Nullable="false" MaxLength="128" FixedLength="false" Unicode="true" />
-          <Property Name="principal_id" Type="Int32" Nullable="false" />
-          <Property Name="diagram_id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
-          <Property Name="version" Type="Int32" />
-          <Property Name="definition" Type="Binary" MaxLength="Max" FixedLength="false" />
-        </EntityType>
-        <Association Name="FK_Product_Category">
+        <Association Name="FK_Product_Product">
           <End Type="ShopMVCModel.Category" Role="Category" Multiplicity="1" />
-          <End Type="ShopMVCModel.Product" Role="Product" Multiplicity="*" />
+          <End Type="ShopMVCModel.Product" Role="Product" Multiplicity="0..1" />
           <ReferentialConstraint>
             <Principal Role="Category">
               <PropertyRef Name="CategoryID" />
             </Principal>
             <Dependent Role="Product">
-              <PropertyRef Name="CategoryID" />
+              <PropertyRef Name="ProductID" />
             </Dependent>
           </ReferentialConstraint>
         </Association>
@@ -281,8 +261,8 @@
             </Dependent>
           </ReferentialConstraint>
         </Association>
-        <Association Name="FK_OrdersDetail_Product">
-          <End Type="ShopMVCModel.Product" Role="Product" Multiplicity="1" />
+        <Association Name="FK_OrdersDetail_Product1">
+          <End Type="ShopMVCModel.Product" Role="Product" Multiplicity="0..1" />
           <End Type="ShopMVCModel.OrdersDetail" Role="OrdersDetail" Multiplicity="*" />
           <ReferentialConstraint>
             <Principal Role="Product">
@@ -330,6 +310,7 @@
           <EntitySetMapping Name="Orders">
             <EntityTypeMapping TypeName="ShopMVCModel.Order">
               <MappingFragment StoreEntitySet="Orders">
+                <ScalarProperty Name="OrderDate" ColumnName="OrderDate" />
                 <ScalarProperty Name="CustomerID" ColumnName="CustomerID" />
                 <ScalarProperty Name="OderDescription" ColumnName="OderDescription" />
                 <ScalarProperty Name="TongTien" ColumnName="TongTien" />
@@ -356,17 +337,6 @@
                 <ScalarProperty Name="UnitPrice" ColumnName="UnitPrice" />
                 <ScalarProperty Name="ProductName" ColumnName="ProductName" />
                 <ScalarProperty Name="ProductID" ColumnName="ProductID" />
-              </MappingFragment>
-            </EntityTypeMapping>
-          </EntitySetMapping>
-          <EntitySetMapping Name="sysdiagrams">
-            <EntityTypeMapping TypeName="ShopMVCModel.sysdiagram">
-              <MappingFragment StoreEntitySet="sysdiagrams">
-                <ScalarProperty Name="definition" ColumnName="definition" />
-                <ScalarProperty Name="version" ColumnName="version" />
-                <ScalarProperty Name="diagram_id" ColumnName="diagram_id" />
-                <ScalarProperty Name="principal_id" ColumnName="principal_id" />
-                <ScalarProperty Name="name" ColumnName="name" />
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>
@@ -399,11 +369,10 @@
         <EntityTypeShape EntityType="ShopMVCModel.Order" Width="1.5" PointX="3" PointY="5" />
         <EntityTypeShape EntityType="ShopMVCModel.OrdersDetail" Width="1.5" PointX="5.25" PointY="1" />
         <EntityTypeShape EntityType="ShopMVCModel.Product" Width="1.5" PointX="3" PointY="1" />
-        <EntityTypeShape EntityType="ShopMVCModel.sysdiagram" Width="1.5" PointX="7.75" PointY="0.75" />
-        <AssociationConnector Association="ShopMVCModel.FK_Product_Category" />
+        <AssociationConnector Association="ShopMVCModel.FK_Product_Product" />
         <AssociationConnector Association="ShopMVCModel.FK_Orders_Customer" />
         <AssociationConnector Association="ShopMVCModel.FK_OrdersDetail_Orders" />
-        <AssociationConnector Association="ShopMVCModel.FK_OrdersDetail_Product" />
+        <AssociationConnector Association="ShopMVCModel.FK_OrdersDetail_Product1" />
       </Diagram>
     </Diagrams>
   </Designer>
