@@ -124,15 +124,15 @@ namespace Shop.Areas.admin.Controllers
                 return RedirectToAction("Index");
 
         }
-        public ActionResult RedirectToOrders()
+        public ActionResult RedirectToOrder()
         {
             return RedirectToAction("Index","Orders");
         }
-        public ActionResult RedirectToProducs()
+        public ActionResult RedirectToProduct()
         {
             return RedirectToAction("Index","Products");
         }
-        public ActionResult redirectToCategories()
+        public ActionResult RedirectToCategories()
         {
             return RedirectToAction("Index", "Categories");
         }

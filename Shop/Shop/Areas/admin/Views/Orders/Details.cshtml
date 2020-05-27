@@ -7,9 +7,6 @@
 
     <h2>Orders Details</h2>
 
-<p>
-    @Html.ActionLink("Create New", "Create")
-</p>
 <table class="table">
     <tr>
         <th>
@@ -56,9 +53,12 @@
     <td>
         @Html.ActionLink("Edit", "Edit", new { /* id=item.PrimaryKey */ }) |
         @Html.ActionLink("Details", "Details", new {/* id=item*/  }) |
-        @Html.ActionLink("Delete", "Delete", new { /* id=item.PrimaryKey */ })
+        @Html.ActionLink("Delete","DeleteOrderDetail" ,new {id=item.OrderDetailsID})
     </td>
 </tr>
 }
 
 </table>
+<div>
+    @Html.ActionLink("Back to List","Index")
+</div>

@@ -201,6 +201,27 @@ namespace Shop.Areas.admin.Controllers
         {
             return RedirectToAction("Index", "Products");
         }
+        public ActionResult DeleteOrderDetail(int? id)
+        {
+            OrdersDetail p = db.OrdersDetails.Where(s => s.OrdersDetailID == id).FirstOrDefault();
+            OrderViewModel odm = new OrderViewModel();
+            odm.OrderDetailsID = p.OrdersDetailID;
+            odm.OrderID = p.OrderID;
+            odm.Price =  p.Price.ToString();
+            odm.Quantity = (int) p.Quantity;
+            odm.Product = p.Product;
+            return View(odm);
+        }
+        [HttpPost, ActionName("DeleteOrderDetail")]
+        [ValidateAntiForgeryToken]
+        public ActionResult DeleteOrderDetailConfirmed(int id)
+        {
+            OrdersDetail p = db.OrdersDetails.Where(s => s.OrdersDetailID == id).FirstOrDefault();
+            int orderId = p.OrderID;
+            db.OrdersDetails.Remove(p);
+            db.SaveChanges();
+            return RedirectToAction("Details",new {id = orderId});
+        }
         protected override void Dispose(bool disposing)
         {
             if (disposing)
