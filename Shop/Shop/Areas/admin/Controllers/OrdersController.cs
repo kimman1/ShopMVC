@@ -74,15 +74,18 @@ namespace Shop.Areas.admin.Controllers
         [ValidateAntiForgeryToken]
         public ActionResult Create(Order order, FormCollection fc)
         {
-            if (ModelState.IsValid)
-            {
-                string dropdownID = fc["DropDownCustomer"].ToString();
-                order.CustomerID = int.Parse(dropdownID);
-                db.Orders.Add(order);
-                db.SaveChanges();
-                return RedirectToAction("Index");
-            }
+                
+                    if (ModelState.IsValid)
+                    {
 
+                        string dropdownID = fc["DropDownCustomer"].ToString();
+                        order.CustomerID = int.Parse(dropdownID);
+                        order.TongTien = 0 + "";
+                        db.Orders.Add(order);
+                        db.SaveChanges();
+                        return RedirectToAction("Index");
+                    }
+            
             return View(order);
         }
         /*
@@ -178,12 +181,15 @@ namespace Shop.Areas.admin.Controllers
             if (ModelState.IsValid)
             {
                 int product_id = int.Parse(fc["ProductID"].ToString());
+                Order od = db.Orders.Where(s => s.OrderID == id).FirstOrDefault();
+                Product pd = db.Products.Where(s => s.ProductID == product_id).FirstOrDefault();
                 OrdersDetail odetails = new OrdersDetail();
                 odetails.OrderID = id;
                 odetails.Quantity = orderViewModel.Quantity;
                 odetails.ProductID = product_id;
                 odetails.Price = decimal.Parse(orderViewModel.Price) ;
                 db.OrdersDetails.Add(odetails);
+                od.TongTien = (decimal.Parse(od.TongTien)+ orderViewModel.Quantity * pd.UnitPrice).ToString();
                 db.SaveChanges();
                 return RedirectToAction("Index");
             }
@@ -203,6 +209,7 @@ namespace Shop.Areas.admin.Controllers
         }
         public ActionResult DeleteOrderDetail(int? id)
         {
+           
             OrdersDetail p = db.OrdersDetails.Where(s => s.OrdersDetailID == id).FirstOrDefault();
             OrderViewModel odm = new OrderViewModel();
             odm.OrderDetailsID = p.OrdersDetailID;
@@ -214,11 +221,16 @@ namespace Shop.Areas.admin.Controllers
         }
         [HttpPost, ActionName("DeleteOrderDetail")]
         [ValidateAntiForgeryToken]
-        public ActionResult DeleteOrderDetailConfirmed(int id)
+        public ActionResult DeleteOrderDetailConfirmed(int id, int orderid)
         {
+            Order od = db.Orders.Where(s => s.OrderID == orderid).FirstOrDefault();
             OrdersDetail p = db.OrdersDetails.Where(s => s.OrdersDetailID == id).FirstOrDefault();
+            Product pd = db.Products.Where(s => s.ProductID == p.ProductID).FirstOrDefault();
             int orderId = p.OrderID;
             db.OrdersDetails.Remove(p);
+            db.SaveChanges();
+            od.TongTien = (decimal.Parse( (od.TongTien)) - (pd.UnitPrice * p.Quantity)).ToString();
+            db.Entry(od).State = EntityState.Modified;
             db.SaveChanges();
             return RedirectToAction("Details",new {id = orderId});
         }

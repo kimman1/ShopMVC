@@ -53,7 +53,7 @@
     <td>
         @Html.ActionLink("Edit", "Edit", new { /* id=item.PrimaryKey */ }) |
         @Html.ActionLink("Details", "Details", new {/* id=item*/  }) |
-        @Html.ActionLink("Delete","DeleteOrderDetail" ,new {id=item.OrderDetailsID})
+        @Html.ActionLink("Delete","DeleteOrderDetail" ,new {id=item.OrderDetailsID, orderid = item.OrderID})
     </td>
 </tr>
 }
