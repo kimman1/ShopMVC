@@ -210,7 +210,7 @@ namespace Shop.Areas.admin.Controllers
                 }
                 if (flag == true)
                 {
-                 //   ViewBag.ProductIDerror = "Sản phẩm bạn thêm đã có trong "
+                    // ViewBag.ProductIDerror = "Sản phẩm bạn thêm đã có trong "
                     return RedirectToAction("CreateOrderDetail", id);
                     //return Content("<script language='javascript' type='text/javascript'>alert('Sản phẩm bạn thêm đã có trong Order Detail, vui lòng chọn sản phẩm khác');</script>");
                 }
