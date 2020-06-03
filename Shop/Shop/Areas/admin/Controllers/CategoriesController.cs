@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Data;
 using System.Data.Entity;
+using System.Data.Entity.Core.Objects;
 using System.Linq;
 using System.Net;
 using System.Web;
@@ -128,9 +129,22 @@ namespace Shop.Areas.admin.Controllers
         public ActionResult DeleteConfirmed(int id)
         {
             Category category = db.Categories.Find(id);
-            db.Categories.Remove(category);
-            db.SaveChanges();
-            return RedirectToAction("Index");
+            ObjectParameter returnValue = new ObjectParameter("outputresult", typeof(int));
+            db.deleteCategory(id, returnValue);
+            int result = Convert.ToInt32(returnValue.Value);
+            //db.Categories.Remove(category);
+            if (result == 0)
+            {
+                ViewBag.status = "Xóa thất bại. Kiểm tra Products!!!";
+                return View(category);
+            }
+            else
+            {
+                db.SaveChanges();
+                return RedirectToAction("Index");
+            }
+
+           
         }
         public ActionResult RedirectToCustomer()
         {

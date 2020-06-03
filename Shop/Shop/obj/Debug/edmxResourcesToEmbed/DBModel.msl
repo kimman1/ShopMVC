@@ -1,6 +1,9 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <Mapping Space="C-S" xmlns="http://schemas.microsoft.com/ado/2009/11/mapping/cs">
   <EntityContainerMapping StorageEntityContainer="ShopMVCModelStoreContainer" CdmEntityContainer="ShopMVCEntities">
+    <FunctionImportMapping FunctionImportName="deleteCustomer" FunctionName="ShopMVCModel.Store.deleteCustomer" />
+    <FunctionImportMapping FunctionImportName="deleteCategory" FunctionName="ShopMVCModel.Store.deleteCategory" />
+    <FunctionImportMapping FunctionImportName="deleteProduct" FunctionName="ShopMVCModel.Store.deleteProduct" />
     <EntitySetMapping Name="admins">
       <EntityTypeMapping TypeName="ShopMVCModel.admin">
         <MappingFragment StoreEntitySet="admin">
@@ -47,7 +50,6 @@
           <ScalarProperty Name="Price" ColumnName="Price" />
           <ScalarProperty Name="Quantity" ColumnName="Quantity" />
           <ScalarProperty Name="OrderID" ColumnName="OrderID" />
-          <ScalarProperty Name="OrdersDetailID" ColumnName="OrdersDetailID" />
         </MappingFragment>
       </EntityTypeMapping>
     </EntitySetMapping>
@@ -62,5 +64,6 @@
         </MappingFragment>
       </EntityTypeMapping>
     </EntitySetMapping>
+    <FunctionImportMapping FunctionImportName="deleteOrders" FunctionName="ShopMVCModel.Store.deleteOrders" />
   </EntityContainerMapping>
 </Mapping>

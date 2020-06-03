@@ -1,6 +1,18 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <Schema Namespace="ShopMVCModel" Alias="Self" annotation:UseStrongSpatialTypes="false" xmlns:annotation="http://schemas.microsoft.com/ado/2009/02/edm/annotation" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm">
   <EntityContainer Name="ShopMVCEntities" annotation:LazyLoadingEnabled="true">
+    <FunctionImport Name="deleteCustomer">
+      <Parameter Name="idCustomer" Mode="In" Type="Int32" />
+      <Parameter Name="outputresult" Mode="InOut" Type="Int32" />
+    </FunctionImport>
+    <FunctionImport Name="deleteCategory">
+      <Parameter Name="idCat" Mode="In" Type="Int32" />
+      <Parameter Name="outputresult" Mode="InOut" Type="Int32" />
+    </FunctionImport>
+    <FunctionImport Name="deleteProduct">
+      <Parameter Name="idProduct" Mode="In" Type="Int32" />
+      <Parameter Name="outputresult" Mode="InOut" Type="Int32" />
+    </FunctionImport>
     <EntitySet Name="admins" EntityType="ShopMVCModel.admin" />
     <EntitySet Name="Categories" EntityType="ShopMVCModel.Category" />
     <EntitySet Name="Customers" EntityType="ShopMVCModel.Customer" />
@@ -23,6 +35,10 @@
       <End Role="Product" EntitySet="Products" />
       <End Role="OrdersDetail" EntitySet="OrdersDetails" />
     </AssociationSet>
+    <FunctionImport Name="deleteOrders">
+      <Parameter Name="idOrder" Mode="In" Type="Int32" />
+      <Parameter Name="outputresult" Mode="InOut" Type="Int32" />
+    </FunctionImport>
   </EntityContainer>
   <EntityType Name="admin">
     <Key>
@@ -39,7 +55,7 @@
     <Property Name="CategoryID" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
     <Property Name="CategoryName" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
     <Property Name="Description" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
-    <NavigationProperty Name="Product" Relationship="ShopMVCModel.FK_Product_Product" FromRole="Category" ToRole="Product" />
+    <NavigationProperty Name="Products" Relationship="ShopMVCModel.FK_Product_Product" FromRole="Category" ToRole="Product" />
   </EntityType>
   <EntityType Name="Customer">
     <Key>
@@ -65,14 +81,13 @@
   </EntityType>
   <EntityType Name="OrdersDetail">
     <Key>
-      <PropertyRef Name="OrdersDetailID" />
       <PropertyRef Name="OrderID" />
+      <PropertyRef Name="ProductID" />
     </Key>
-    <Property Name="OrdersDetailID" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
     <Property Name="OrderID" Type="Int32" Nullable="false" />
     <Property Name="Quantity" Type="Int32" />
     <Property Name="Price" Type="Decimal" Precision="19" Scale="4" />
-    <Property Name="ProductID" Type="Int32" />
+    <Property Name="ProductID" Type="Int32" Nullable="false" />
     <NavigationProperty Name="Order" Relationship="ShopMVCModel.FK_OrdersDetail_Orders" FromRole="OrdersDetail" ToRole="Order" />
     <NavigationProperty Name="Product" Relationship="ShopMVCModel.FK_OrdersDetail_Product1" FromRole="OrdersDetail" ToRole="Product" />
   </EntityType>
@@ -89,14 +104,14 @@
     <NavigationProperty Name="OrdersDetails" Relationship="ShopMVCModel.FK_OrdersDetail_Product1" FromRole="Product" ToRole="OrdersDetail" />
   </EntityType>
   <Association Name="FK_Product_Product">
-    <End Type="ShopMVCModel.Category" Role="Category" Multiplicity="1" />
-    <End Type="ShopMVCModel.Product" Role="Product" Multiplicity="0..1" />
+    <End Type="ShopMVCModel.Category" Role="Category" Multiplicity="0..1" />
+    <End Type="ShopMVCModel.Product" Role="Product" Multiplicity="*" />
     <ReferentialConstraint>
       <Principal Role="Category">
         <PropertyRef Name="CategoryID" />
       </Principal>
       <Dependent Role="Product">
-        <PropertyRef Name="ProductID" />
+        <PropertyRef Name="CategoryID" />
       </Dependent>
     </ReferentialConstraint>
   </Association>
@@ -125,7 +140,7 @@
     </ReferentialConstraint>
   </Association>
   <Association Name="FK_OrdersDetail_Product1">
-    <End Type="ShopMVCModel.Product" Role="Product" Multiplicity="0..1" />
+    <End Type="ShopMVCModel.Product" Role="Product" Multiplicity="1" />
     <End Type="ShopMVCModel.OrdersDetail" Role="OrdersDetail" Multiplicity="*" />
     <ReferentialConstraint>
       <Principal Role="Product">

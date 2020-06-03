@@ -12,6 +12,8 @@ namespace Shop
     using System;
     using System.Data.Entity;
     using System.Data.Entity.Infrastructure;
+    using System.Data.Entity.Core.Objects;
+    using System.Linq;
     
     public partial class ShopMVCEntities : DbContext
     {
@@ -31,5 +33,41 @@ namespace Shop
         public virtual DbSet<Order> Orders { get; set; }
         public virtual DbSet<OrdersDetail> OrdersDetails { get; set; }
         public virtual DbSet<Product> Products { get; set; }
+    
+        public virtual int deleteCustomer(Nullable<int> idCustomer, ObjectParameter outputresult)
+        {
+            var idCustomerParameter = idCustomer.HasValue ?
+                new ObjectParameter("idCustomer", idCustomer) :
+                new ObjectParameter("idCustomer", typeof(int));
+    
+            return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction("deleteCustomer", idCustomerParameter, outputresult);
+        }
+    
+        public virtual int deleteCategory(Nullable<int> idCat, ObjectParameter outputresult)
+        {
+            var idCatParameter = idCat.HasValue ?
+                new ObjectParameter("idCat", idCat) :
+                new ObjectParameter("idCat", typeof(int));
+    
+            return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction("deleteCategory", idCatParameter, outputresult);
+        }
+    
+        public virtual int deleteProduct(Nullable<int> idProduct, ObjectParameter outputresult)
+        {
+            var idProductParameter = idProduct.HasValue ?
+                new ObjectParameter("idProduct", idProduct) :
+                new ObjectParameter("idProduct", typeof(int));
+    
+            return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction("deleteProduct", idProductParameter, outputresult);
+        }
+    
+        public virtual int deleteOrders(Nullable<int> idOrder, ObjectParameter outputresult)
+        {
+            var idOrderParameter = idOrder.HasValue ?
+                new ObjectParameter("idOrder", idOrder) :
+                new ObjectParameter("idOrder", typeof(int));
+    
+            return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction("deleteOrders", idOrderParameter, outputresult);
+        }
     }
 }

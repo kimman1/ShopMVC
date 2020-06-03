@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Data.Entity;
+using System.Data.Entity.Core.Objects;
 using System.Data.SqlClient;
 using System.Linq;
 using System.Net;
@@ -109,20 +110,20 @@ namespace Shop.Areas.admin.Controllers
         public ActionResult DeleteConfirmed(int id)
         {
             Customer customer = db.Customers.Find(id);
-            try
+            ObjectParameter returnValue = new ObjectParameter("outputresult", typeof(int));
+            db.deleteCustomer(id, returnValue);
+            if (Convert.ToInt32(returnValue.Value) == 0)
             {
-                db.Customers.Remove(customer);
+                ViewBag.error = "Xóa thất bại. Kiểm tra Orders";
+                return View(customer);  
+            }
+            else
+            {
                 db.SaveChanges();
-
-            }
-            catch (Exception)
-            {
-               
-                return View("Error");
-            }
-         
                 return RedirectToAction("Index");
 
+            }
+            
         }
         public ActionResult RedirectToOrder()
         {

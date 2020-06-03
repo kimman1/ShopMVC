@@ -37,14 +37,13 @@
   </EntityType>
   <EntityType Name="OrdersDetail">
     <Key>
-      <PropertyRef Name="OrdersDetailID" />
       <PropertyRef Name="OrderID" />
+      <PropertyRef Name="ProductID" />
     </Key>
-    <Property Name="OrdersDetailID" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
     <Property Name="OrderID" Type="int" Nullable="false" />
     <Property Name="Quantity" Type="int" />
     <Property Name="Price" Type="money" />
-    <Property Name="ProductID" Type="int" />
+    <Property Name="ProductID" Type="int" Nullable="false" />
   </EntityType>
   <EntityType Name="Product">
     <Key>
@@ -81,7 +80,7 @@
     </ReferentialConstraint>
   </Association>
   <Association Name="FK_OrdersDetail_Product1">
-    <End Role="Product" Type="Self.Product" Multiplicity="0..1" />
+    <End Role="Product" Type="Self.Product" Multiplicity="1" />
     <End Role="OrdersDetail" Type="Self.OrdersDetail" Multiplicity="*" />
     <ReferentialConstraint>
       <Principal Role="Product">
@@ -93,17 +92,33 @@
     </ReferentialConstraint>
   </Association>
   <Association Name="FK_Product_Product">
-    <End Role="Category" Type="Self.Category" Multiplicity="1" />
-    <End Role="Product" Type="Self.Product" Multiplicity="0..1" />
+    <End Role="Category" Type="Self.Category" Multiplicity="0..1" />
+    <End Role="Product" Type="Self.Product" Multiplicity="*" />
     <ReferentialConstraint>
       <Principal Role="Category">
         <PropertyRef Name="CategoryID" />
       </Principal>
       <Dependent Role="Product">
-        <PropertyRef Name="ProductID" />
+        <PropertyRef Name="CategoryID" />
       </Dependent>
     </ReferentialConstraint>
   </Association>
+  <Function Name="deleteCategory" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+    <Parameter Name="idCat" Type="int" Mode="In" />
+    <Parameter Name="outputresult" Type="int" Mode="InOut" />
+  </Function>
+  <Function Name="deleteCustomer" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+    <Parameter Name="idCustomer" Type="int" Mode="In" />
+    <Parameter Name="outputresult" Type="int" Mode="InOut" />
+  </Function>
+  <Function Name="deleteOrders" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+    <Parameter Name="idOrder" Type="int" Mode="In" />
+    <Parameter Name="outputresult" Type="int" Mode="InOut" />
+  </Function>
+  <Function Name="deleteProduct" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+    <Parameter Name="idProduct" Type="int" Mode="In" />
+    <Parameter Name="outputresult" Type="int" Mode="InOut" />
+  </Function>
   <EntityContainer Name="ShopMVCModelStoreContainer">
     <EntitySet Name="admin" EntityType="Self.admin" Schema="dbo" store:Type="Tables" />
     <EntitySet Name="Category" EntityType="Self.Category" Schema="dbo" store:Type="Tables" />

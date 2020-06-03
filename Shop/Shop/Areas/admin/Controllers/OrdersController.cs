@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Data;
 using System.Data.Entity;
+using System.Data.Entity.Core.Objects;
 using System.Linq;
 using System.Net;
 using System.Web;
@@ -17,6 +18,7 @@ namespace Shop.Areas.admin.Controllers
         private ShopMVCEntities db = new ShopMVCEntities();
 
         // GET: admin/Orders
+        // O***************************************** ORDER *********************************/
         public ActionResult Index()
         {
             return View(db.Orders.ToList());
@@ -45,7 +47,7 @@ namespace Shop.Areas.admin.Controllers
             foreach (OrdersDetail odd in p)
             {
                 OrderViewModel od = new OrderViewModel();
-                od.OrderDetailsID = odd.OrdersDetailID;
+                //od.OrderDetailsID = odd.OrdersDetailID;
                 od.OrderID = odd.OrderID;
                 od.Price = odd.Price.ToString(); ;
                 od.Product = odd.Product;
@@ -81,6 +83,7 @@ namespace Shop.Areas.admin.Controllers
                         string dropdownID = fc["DropDownCustomer"].ToString();
                         order.CustomerID = int.Parse(dropdownID);
                         order.TongTien = 0 + "";
+                        order.OrderDate = DateTime.Now;
                         db.Orders.Add(order);
                         db.SaveChanges();
                         return RedirectToAction("Index");
@@ -163,9 +166,21 @@ namespace Shop.Areas.admin.Controllers
         public ActionResult DeleteConfirmed(int id)
         {
             Order order = db.Orders.Find(id);
-            db.Orders.Remove(order);
-            db.SaveChanges();
-            return RedirectToAction("Index");
+            ObjectParameter returnValue = new ObjectParameter("outputresult", typeof(int));
+            db.deleteOrders(id, returnValue);
+            int result = Convert.ToInt32(returnValue.Value);
+            if (result == 0)
+            {
+                ViewBag.status = "Xóa thất bại. Vui lòng kiểm tra Orders Detail!!!";
+                return View(order);
+            }
+            else
+            {
+                db.SaveChanges();
+                return RedirectToAction("Index");
+            }
+           
+            
         }
         public ActionResult CreateOrderDetail()
         {
@@ -180,20 +195,43 @@ namespace Shop.Areas.admin.Controllers
 
             if (ModelState.IsValid)
             {
+                bool flag = false;
                 int product_id = int.Parse(fc["ProductID"].ToString());
                 Order od = db.Orders.Where(s => s.OrderID == id).FirstOrDefault();
                 Product pd = db.Products.Where(s => s.ProductID == product_id).FirstOrDefault();
-                OrdersDetail odetails = new OrdersDetail();
-                odetails.OrderID = id;
-                odetails.Quantity = orderViewModel.Quantity;
-                odetails.ProductID = product_id;
-                odetails.Price = decimal.Parse(orderViewModel.Price) ;
-                db.OrdersDetails.Add(odetails);
-                od.TongTien = (decimal.Parse(od.TongTien)+ orderViewModel.Quantity * pd.UnitPrice).ToString();
-                db.SaveChanges();
-                return RedirectToAction("Index");
+                List<int> listIdProduct= db.OrdersDetails.Where(s => s.OrderID == id).Select(s => s.ProductID).ToList();
+                foreach (int idproduct in listIdProduct)
+                {
+                    if (idproduct == product_id)
+                    {
+                        flag = true;
+                        break;
+                    }
+                }
+                if (flag == true)
+                {
+                 //   ViewBag.ProductIDerror = "Sản phẩm bạn thêm đã có trong "
+                    return RedirectToAction("CreateOrderDetail", id);
+                    //return Content("<script language='javascript' type='text/javascript'>alert('Sản phẩm bạn thêm đã có trong Order Detail, vui lòng chọn sản phẩm khác');</script>");
+                }
+                else
+                {
+                    OrdersDetail odetails = new OrdersDetail();
+                    odetails.OrderID = id;
+                    odetails.Quantity = orderViewModel.Quantity;
+                    odetails.ProductID = product_id;
+                    odetails.Price = decimal.Parse(orderViewModel.Price);
+                    db.OrdersDetails.Add(odetails);
+                    od.TongTien = (decimal.Parse(od.TongTien) + orderViewModel.Quantity * pd.UnitPrice).ToString();
+                    db.SaveChanges();
+                    return RedirectToAction("Index");
+                }
+
             }
-            return View();
+            else
+            {
+                return RedirectToAction("CreateOrderDetail", id);
+            }
         }
         public ActionResult RedirectToCategories()
         {
@@ -209,30 +247,32 @@ namespace Shop.Areas.admin.Controllers
         }
         public ActionResult DeleteOrderDetail(int? id)
         {
-           
-            OrdersDetail p = db.OrdersDetails.Where(s => s.OrdersDetailID == id).FirstOrDefault();
-            OrderViewModel odm = new OrderViewModel();
-            odm.OrderDetailsID = p.OrdersDetailID;
-            odm.OrderID = p.OrderID;
-            odm.Price =  p.Price.ToString();
-            odm.Quantity = (int) p.Quantity;
-            odm.Product = p.Product;
-            return View(odm);
+
+            /* OrdersDetail p = db.OrdersDetails.Where(s => s.OrdersDetailID == id).FirstOrDefault();
+             OrderViewModel odm = new OrderViewModel();
+             //odm.OrderDetailsID = p.OrdersDetailID;
+             odm.OrderID = p.OrderID;
+             odm.Price =  p.Price.ToString();
+             odm.Quantity = (int) p.Quantity;
+             odm.Product = p.Product;
+             return View(odm);*/
+            return View();
         }
         [HttpPost, ActionName("DeleteOrderDetail")]
         [ValidateAntiForgeryToken]
         public ActionResult DeleteOrderDetailConfirmed(int id, int orderid)
         {
-            Order od = db.Orders.Where(s => s.OrderID == orderid).FirstOrDefault();
-            OrdersDetail p = db.OrdersDetails.Where(s => s.OrdersDetailID == id).FirstOrDefault();
-            Product pd = db.Products.Where(s => s.ProductID == p.ProductID).FirstOrDefault();
-            int orderId = p.OrderID;
-            db.OrdersDetails.Remove(p);
-            db.SaveChanges();
-            od.TongTien = (decimal.Parse( (od.TongTien)) - (pd.UnitPrice * p.Quantity)).ToString();
-            db.Entry(od).State = EntityState.Modified;
-            db.SaveChanges();
-            return RedirectToAction("Details",new {id = orderId});
+            /* Order od = db.Orders.Where(s => s.OrderID == orderid).FirstOrDefault();
+             OrdersDetail p = db.OrdersDetails.Where(s => s.OrdersDetailID == id).FirstOrDefault();
+             Product pd = db.Products.Where(s => s.ProductID == p.ProductID).FirstOrDefault();
+             int orderId = p.OrderID;
+             db.OrdersDetails.Remove(p);
+             db.SaveChanges();
+             od.TongTien = (decimal.Parse( (od.TongTien)) - (pd.UnitPrice * p.Quantity)).ToString();
+             db.Entry(od).State = EntityState.Modified;
+             db.SaveChanges();
+             return RedirectToAction("Details",new {id = orderId});*/
+            return View();
         }
         protected override void Dispose(bool disposing)
         {

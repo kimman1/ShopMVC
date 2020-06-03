@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Data;
 using System.Data.Entity;
+using System.Data.Entity.Core.Objects;
 using System.Linq;
 using System.Net;
 using System.Web;
@@ -156,9 +157,21 @@ namespace Shop.Areas.admin.Controllers
         public ActionResult DeleteConfirmed(int id)
         {
             Product product = db.Products.Find(id);
-            db.Products.Remove(product);
-            db.SaveChanges();
-            return RedirectToAction("Index");
+            ObjectParameter returnValue = new ObjectParameter("outputresult", typeof(int));
+            db.deleteProduct(id, returnValue);
+            int result = Convert.ToInt32(returnValue.Value);
+            if (result == 0)
+            {
+                ViewBag.status = "Xóa thất bại. Kiểm tra Orders";
+                return View(product);
+            }
+            else
+            {
+                db.SaveChanges();
+                return RedirectToAction("Index");
+            }
+            
+            
         }
         public ActionResult RedirectToCategories()
         {

@@ -8,7 +8,7 @@ namespace Shop.Areas.admin.ViewModel
 {
     public class OrderViewModel
     {
-        public int OrderDetailsID { get; set; }
+        //public int OrderDetailsID { get; set; }
         public int OrderID { get; set; }
         public int Quantity { get; set; }
         public string Price { get; set; }

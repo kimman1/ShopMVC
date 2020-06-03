@@ -14,11 +14,10 @@ namespace Shop
     
     public partial class OrdersDetail
     {
-        public int OrdersDetailID { get; set; }
         public int OrderID { get; set; }
         public Nullable<int> Quantity { get; set; }
         public Nullable<decimal> Price { get; set; }
-        public Nullable<int> ProductID { get; set; }
+        public int ProductID { get; set; }
     
         public virtual Order Order { get; set; }
         public virtual Product Product { get; set; }
