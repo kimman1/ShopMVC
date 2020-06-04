@@ -46,17 +46,6 @@ namespace Shop.Areas.admin.Controllers
         }
         [HttpPost]
         [ValidateAntiForgeryToken]
-        /*public ActionResult Create([Bind(Include = "CategoryID,CategoryName,Description")] Category category)
-        {
-            if (ModelState.IsValid)
-            {
-                db.Categories.Add(category);
-                db.SaveChanges();
-                return RedirectToAction("Index");
-            }
-
-            return View(category);
-        }*/
         public ActionResult Create(Category cat)
         {
             if (ModelState.IsValid)
@@ -87,16 +76,6 @@ namespace Shop.Areas.admin.Controllers
         // more details see https://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        /*public ActionResult Edit([Bind(Include = "CategoryID,CategoryName,Description")] Category category)
-        {
-            if (ModelState.IsValid)
-            {
-                db.Entry(category).State = EntityState.Modified;
-                db.SaveChanges();
-                return RedirectToAction("Index");
-            }
-            return View(category);
-        }*/
         public ActionResult Edit(Category cat)
         {
             if (ModelState.IsValid)
@@ -146,6 +125,7 @@ namespace Shop.Areas.admin.Controllers
 
            
         }
+       
         public ActionResult RedirectToCustomer()
         {
             return RedirectToAction("Index","Customers");

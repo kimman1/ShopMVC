@@ -5,9 +5,11 @@ using System.Data.Entity;
 using System.Data.Entity.Core.Objects;
 using System.Linq;
 using System.Net;
+using System.Threading;
 using System.Web;
 using System.Web.Mvc;
 using System.Web.UI.WebControls;
+using System.Web.WebSockets;
 using Shop;
 using Shop.Areas.admin.ViewModel;
 
@@ -210,9 +212,13 @@ namespace Shop.Areas.admin.Controllers
                 }
                 if (flag == true)
                 {
-                    // ViewBag.ProductIDerror = "Sản phẩm bạn thêm đã có trong "
-                    return RedirectToAction("CreateOrderDetail", id);
+                    //ViewBag.ProductIDerror = "Sản phẩm bạn thêm đã có trong ";
+                    //Thread.Sleep(2000);
+                    TempData["status"]  = "Sản phẩm bạn thêm đã có trong giỏ hàng";
+                    TempData["orderID"] = id;
+                    return RedirectToAction("Problem" ,"Problem");
                     //return Content("<script language='javascript' type='text/javascript'>alert('Sản phẩm bạn thêm đã có trong Order Detail, vui lòng chọn sản phẩm khác');</script>");
+                    
                 }
                 else
                 {
@@ -245,25 +251,24 @@ namespace Shop.Areas.admin.Controllers
         {
             return RedirectToAction("Index", "Products");
         }
-        public ActionResult DeleteOrderDetail(int? id)
+        public ActionResult DeleteOrderDetail(int? Productid, int? orderid)
         {
 
-            /* OrdersDetail p = db.OrdersDetails.Where(s => s.OrdersDetailID == id).FirstOrDefault();
+             OrdersDetail p = db.OrdersDetails.Where(s => s.ProductID == Productid && s.OrderID == orderid).FirstOrDefault();
              OrderViewModel odm = new OrderViewModel();
-             //odm.OrderDetailsID = p.OrdersDetailID;
              odm.OrderID = p.OrderID;
              odm.Price =  p.Price.ToString();
              odm.Quantity = (int) p.Quantity;
              odm.Product = p.Product;
-             return View(odm);*/
-            return View();
+             return View(odm);
+              //return View();
         }
         [HttpPost, ActionName("DeleteOrderDetail")]
         [ValidateAntiForgeryToken]
-        public ActionResult DeleteOrderDetailConfirmed(int id, int orderid)
+        public ActionResult DeleteOrderDetailConfirmed(int Productid, int orderid)
         {
-            /* Order od = db.Orders.Where(s => s.OrderID == orderid).FirstOrDefault();
-             OrdersDetail p = db.OrdersDetails.Where(s => s.OrdersDetailID == id).FirstOrDefault();
+             Order od = db.Orders.Where(s => s.OrderID == orderid).FirstOrDefault();
+             OrdersDetail p = db.OrdersDetails.Where(s => s.ProductID == Productid && s.OrderID == orderid).FirstOrDefault();
              Product pd = db.Products.Where(s => s.ProductID == p.ProductID).FirstOrDefault();
              int orderId = p.OrderID;
              db.OrdersDetails.Remove(p);
@@ -271,8 +276,8 @@ namespace Shop.Areas.admin.Controllers
              od.TongTien = (decimal.Parse( (od.TongTien)) - (pd.UnitPrice * p.Quantity)).ToString();
              db.Entry(od).State = EntityState.Modified;
              db.SaveChanges();
-             return RedirectToAction("Details",new {id = orderId});*/
-            return View();
+             return RedirectToAction("Details",new {id = orderId});
+            
         }
         protected override void Dispose(bool disposing)
         {
