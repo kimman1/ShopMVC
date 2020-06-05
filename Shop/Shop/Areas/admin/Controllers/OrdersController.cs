@@ -44,7 +44,7 @@ namespace Shop.Areas.admin.Controllers
         {
             List<OrdersDetail> p = db.OrdersDetails.Where(m => m.OrderID == id).ToList();
             List<OrderViewModel> viewmodel = new List<OrderViewModel>();
-
+            ViewBag.orderid = id;
 
             foreach (OrdersDetail odd in p)
             {
@@ -189,6 +189,7 @@ namespace Shop.Areas.admin.Controllers
             List<Product> Proc = db.Products.ToList();
             SelectList ProcList = new SelectList(Proc, "ProductID", "ProductName");
             ViewBag.procList = ProcList;
+            
             return View();
         }
         [HttpPost]
@@ -212,12 +213,10 @@ namespace Shop.Areas.admin.Controllers
                 }
                 if (flag == true)
                 {
-                    //ViewBag.ProductIDerror = "Sản phẩm bạn thêm đã có trong ";
-                    //Thread.Sleep(2000);
                     TempData["status"]  = "Sản phẩm bạn thêm đã có trong giỏ hàng";
                     TempData["orderID"] = id;
                     return RedirectToAction("Problem" ,"Problem");
-                    //return Content("<script language='javascript' type='text/javascript'>alert('Sản phẩm bạn thêm đã có trong Order Detail, vui lòng chọn sản phẩm khác');</script>");
+                   
                     
                 }
                 else
@@ -226,11 +225,11 @@ namespace Shop.Areas.admin.Controllers
                     odetails.OrderID = id;
                     odetails.Quantity = orderViewModel.Quantity;
                     odetails.ProductID = product_id;
-                    odetails.Price = decimal.Parse(orderViewModel.Price);
+                    odetails.Price = pd.UnitPrice*orderViewModel.Quantity;
                     db.OrdersDetails.Add(odetails);
                     od.TongTien = (decimal.Parse(od.TongTien) + orderViewModel.Quantity * pd.UnitPrice).ToString();
                     db.SaveChanges();
-                    return RedirectToAction("Index");
+                    return RedirectToAction("Details", new {id = id });
                 }
 
             }
@@ -261,7 +260,7 @@ namespace Shop.Areas.admin.Controllers
              odm.Quantity = (int) p.Quantity;
              odm.Product = p.Product;
              return View(odm);
-              //return View();
+             
         }
         [HttpPost, ActionName("DeleteOrderDetail")]
         [ValidateAntiForgeryToken]
