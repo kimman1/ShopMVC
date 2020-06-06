@@ -26,20 +26,6 @@ namespace Shop.Areas.admin.Controllers
             return View(db.Orders.ToList());
         }
 
-        // GET: admin/Orders/Details/5
-        /* public ActionResult Details(int? id)
-         {
-             if (id == null)
-             {
-                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
-             }
-             Order order = db.Orders.Find(id);
-             if (order == null)
-             {
-                 return HttpNotFound();
-             }
-             return View(order);
-         }*/
         public ActionResult Details(int? id)
         {
             List<OrdersDetail> p = db.OrdersDetails.Where(m => m.OrderID == id).ToList();
@@ -59,7 +45,6 @@ namespace Shop.Areas.admin.Controllers
             return View(viewmodel);
         }
 
-        // GET: admin/Orders/Create
         public ActionResult Create()
         {
             /* var p = db.Products.Select(s => s).ToList();
@@ -71,9 +56,7 @@ namespace Shop.Areas.admin.Controllers
             return View();
         }
 
-        // POST: admin/Orders/Create
-        // To protect from overposting attacks, please enable the specific properties you want to bind to, for 
-        // more details see https://go.microsoft.com/fwlink/?LinkId=317598.
+       
         [HttpPost]
         [ValidateAntiForgeryToken]
         public ActionResult Create(Order order, FormCollection fc)
@@ -93,25 +76,8 @@ namespace Shop.Areas.admin.Controllers
             
             return View(order);
         }
-        /*
-        public ActionResult Create(OrderViewModel ovm, int cusID, int id)
-        {
-            OrdersDetail oDetails = new OrdersDetail();
-            oDetails.OrderID = id;
-            oDetails.Quantity = ovm.Quantity;
-            oDetails.Price =  decimal.Parse(ovm.Price);
-            oDetails.ProductID = ovm.Product.ProductID;
-            Order order = new Order();
-            order.CustomerID = cusID;
-            db.Orders.Add(order);
-            db.SaveChanges();
-            db.OrdersDetails.Add(oDetails);
-            db.SaveChanges();
-            // order.CustomerID = ovm.
-            return View();
-        }
-        */
-        // GET: admin/Orders/Edit/5
+      
+     
         public ActionResult Edit(int? id)
         {
             if (id == null)
@@ -129,9 +95,7 @@ namespace Shop.Areas.admin.Controllers
             return View(order);
         }
 
-        // POST: admin/Orders/Edit/5
-        // To protect from overposting attacks, please enable the specific properties you want to bind to, for 
-        // more details see https://go.microsoft.com/fwlink/?LinkId=317598.
+        
         [HttpPost]
         [ValidateAntiForgeryToken]
         public ActionResult Edit( Order order, FormCollection fc)
