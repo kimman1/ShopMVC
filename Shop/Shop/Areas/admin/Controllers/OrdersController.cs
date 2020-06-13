@@ -157,6 +157,7 @@ namespace Shop.Areas.admin.Controllers
             return View();
         }
         [HttpPost]
+        [ValidateAntiForgeryToken]
         public ActionResult CreateOrderDetail(OrderViewModel orderViewModel, FormCollection fc, int id)
         {
 

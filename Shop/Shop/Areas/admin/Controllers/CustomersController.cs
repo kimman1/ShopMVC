@@ -46,8 +46,9 @@ namespace Shop.Areas.admin.Controllers
         // more details see https://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Create([Bind(Include = "CustomerID,Name,Address,Phone")] Customer customer)
+        public ActionResult Create( Customer customer)
         {
+            
             if (ModelState.IsValid)
             {
                 db.Customers.Add(customer);

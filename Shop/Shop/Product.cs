@@ -9,9 +9,11 @@
 
 namespace Shop
 {
+    using Newtonsoft.Json;
     using System;
     using System.Collections.Generic;
-    
+    using System.ComponentModel.DataAnnotations;
+
     public partial class Product
     {
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2214:DoNotCallOverridableMethodsInConstructors")]
@@ -21,7 +23,9 @@ namespace Shop
         }
     
         public int ProductID { get; set; }
+        [Required(ErrorMessage ="Product Name is missing")]
         public string ProductName { get; set; }
+        [Required(ErrorMessage = "Please type Unit Price")]
         public Nullable<decimal> UnitPrice { get; set; }
         public Nullable<int> InStock { get; set; }
         public Nullable<int> CategoryID { get; set; }

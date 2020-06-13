@@ -74,10 +74,10 @@ namespace Shop.Areas.admin.Controllers
         [ValidateAntiForgeryToken]
         public ActionResult Create(Product product, FormCollection fc)
         {
-            int catID = int.Parse(fc["CateNameDrop"].ToString());
+            
             if (ModelState.IsValid)
             {
-                //product.CategoryID = catID;
+                int catID = int.Parse(fc["CateNameDrop"].ToString());
                 Product p = new Product();
                 p.ProductName = product.ProductName;
                 p.UnitPrice = product.UnitPrice;
@@ -89,7 +89,7 @@ namespace Shop.Areas.admin.Controllers
             }
            
             //ViewBag.ProductID = new SelectList(db.Categories, "CategoryID", "CategoryName", product.ProductID);
-            return View(product);
+            return RedirectToAction("Create");
         }
 
         // GET: admin/Products/Edit/5

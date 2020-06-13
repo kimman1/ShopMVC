@@ -11,7 +11,8 @@ namespace Shop
 {
     using System;
     using System.Collections.Generic;
-    
+    using System.ComponentModel.DataAnnotations;
+
     public partial class Customer
     {
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2214:DoNotCallOverridableMethodsInConstructors")]
@@ -21,7 +22,9 @@ namespace Shop
         }
     
         public int CustomerID { get; set; }
+        [Required(ErrorMessage ="Name is missing")]
         public string Name { get; set; }
+        [Required(ErrorMessage ="Address is missing")]
         public string Address { get; set; }
         public string Phone { get; set; }
     
