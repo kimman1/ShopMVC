@@ -160,7 +160,9 @@ namespace Shop.Areas.admin.Controllers
         [ValidateAntiForgeryToken]
         public ActionResult CreateOrderDetail(OrderViewModel orderViewModel, FormCollection fc, int id)
         {
-
+            List<Product> Proc = db.Products.ToList();
+            SelectList ProcList = new SelectList(Proc, "ProductID", "ProductName");
+            ViewBag.procList = ProcList;
             if (ModelState.IsValid)
             {
                 bool flag = false;
@@ -200,7 +202,8 @@ namespace Shop.Areas.admin.Controllers
             }
             else
             {
-                return RedirectToAction("CreateOrderDetail", id);
+                return View(orderViewModel);
+                //return RedirectToAction("CreateOrderDetail", id);
             }
         }
         public ActionResult RedirectToCategories()

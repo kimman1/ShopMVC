@@ -111,7 +111,6 @@ namespace Shop.Areas.admin.Controllers
             ObjectParameter returnValue = new ObjectParameter("outputresult", typeof(int));
             db.deleteCategory(id, returnValue);
             int result = Convert.ToInt32(returnValue.Value);
-            //db.Categories.Remove(category);
             if (result == 0)
             {
                 ViewBag.status = "Xóa thất bại. Kiểm tra Products!!!";

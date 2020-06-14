@@ -60,7 +60,7 @@ namespace Shop.Areas.admin.Controllers
         // GET: admin/Products/Create
         public ActionResult Create()
         {
-            //ViewBag.ProductID = new SelectList(db.Categories, "CategoryID", "CategoryName");
+            
             List<Category> listcate = db.Categories.ToList();
             SelectList catelist = new SelectList(listcate, "CategoryID", "CategoryName");
             ViewBag.CatList = catelist;
@@ -68,28 +68,37 @@ namespace Shop.Areas.admin.Controllers
         }
 
         // POST: admin/Products/Create
-        // To protect from overposting attacks, please enable the specific properties you want to bind to, for 
-        // more details see https://go.microsoft.com/fwlink/?LinkId=317598.
+       
         [HttpPost]
         [ValidateAntiForgeryToken]
         public ActionResult Create(Product product, FormCollection fc)
         {
-            
+            List<Category> listcate = db.Categories.ToList();
+            SelectList catelist = new SelectList(listcate, "CategoryID", "CategoryName");
+            ViewBag.CatList = catelist;
             if (ModelState.IsValid)
             {
                 int catID = int.Parse(fc["CateNameDrop"].ToString());
                 Product p = new Product();
                 p.ProductName = product.ProductName;
                 p.UnitPrice = product.UnitPrice;
-                p.InStock = product.InStock;
+                if (product.InStock == null)
+                {
+                    
+                    p.InStock = 0;
+                }
+                else
+                {
+                    p.InStock = product.InStock;
+                }
+               
                 p.CategoryID = catID;
                 db.Products.Add(p);
                 db.SaveChanges();
                 return RedirectToAction("Index");
             }
-           
-            //ViewBag.ProductID = new SelectList(db.Categories, "CategoryID", "CategoryName", product.ProductID);
-            return RedirectToAction("Create");
+            return View(product);
+            
         }
 
         // GET: admin/Products/Edit/5
@@ -118,9 +127,7 @@ namespace Shop.Areas.admin.Controllers
             return View(pvm);
         }
 
-        // POST: admin/Products/Edit/5
-        // To protect from overposting attacks, please enable the specific properties you want to bind to, for 
-        // more details see https://go.microsoft.com/fwlink/?LinkId=317598.
+       
         [HttpPost]
         [ValidateAntiForgeryToken]
         public ActionResult Edit(Product product, FormCollection fc)
