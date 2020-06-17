@@ -13,8 +13,7 @@ namespace Shop.Areas.admin.Controllers
     public class CustomersController : Controller
     {
         private ShopMVCEntities db = new ShopMVCEntities();
-
-        // GET: admin/Customers
+        int cusOrderID = -1;
         public ActionResult Index()
         {
             return View(db.Customers.ToList());
@@ -51,9 +50,29 @@ namespace Shop.Areas.admin.Controllers
             
             if (ModelState.IsValid)
             {
-                db.Customers.Add(customer);
-                db.SaveChanges();
-                return RedirectToAction("Index");
+                int phonenumber = -1;
+                if (customer.Phone == null)
+                {
+                    customer.Phone = "0";
+                    db.Customers.Add(customer);
+                    db.SaveChanges();
+                    return RedirectToAction("Index");
+                }
+                else
+                {
+                    if (int.TryParse(customer.Phone.ToString(), out phonenumber))
+                    {
+                        db.Customers.Add(customer);
+                        db.SaveChanges();
+                        return RedirectToAction("Index");
+                    }
+                    else
+                    {
+                        ViewBag.status = "Vui lòng kiểm tra lại số điện thoại hoặc bỏ trống";
+                    }
+                }
+              
+                
             }
 
             return View(customer);
@@ -83,9 +102,30 @@ namespace Shop.Areas.admin.Controllers
         {
             if (ModelState.IsValid)
             {
-                db.Entry(customer).State = EntityState.Modified;
-                db.SaveChanges();
-                return RedirectToAction("Index");
+                int phonenumber = 0;
+                if (customer.Phone == null)
+                {
+                    customer.Phone = "0";
+                    db.SaveChanges();
+                    return RedirectToAction("Index");
+                }
+                else
+                {
+                    if (int.TryParse(customer.Phone.ToString(), out phonenumber))
+                    {
+
+                        db.Entry(customer).State = EntityState.Modified;
+                        db.SaveChanges();
+                        return RedirectToAction("Index");
+                    }
+                    else
+                    {
+                        ViewBag.status = "Vui lòng kiểm tra SĐT hoặc để trống";
+                    }
+                }
+                   
+                
+              
             }
             return View(customer);
         }
@@ -126,6 +166,41 @@ namespace Shop.Areas.admin.Controllers
             }
             
         }
+        public ActionResult CreateOrder()
+        {
+
+            return View();
+        }
+        [HttpPost]
+        public ActionResult CreateOrder(int id, Order oder)
+        {
+            if (id == -1)
+            {
+                return View();
+            }
+            else
+            {
+                
+                oder.CustomerID = id;
+                oder.TongTien = 0 + "";
+                oder.OrderDate = DateTime.Now;
+                db.Orders.Add(oder);
+                db.SaveChanges();
+                return RedirectToAction("CusOrder", new { id = id });
+            }
+           
+        }
+        public ActionResult CusOrder(int id)
+        {
+           
+            var p = db.Orders.Where(s => s.CustomerID == id).ToList();
+            ViewBag.cusID = id;
+            return View(p);
+        }
+        public ActionResult OrdersDetails(int id)
+        {
+            return RedirectToAction("Details", "Orders", new { id = id });
+        }
         public ActionResult RedirectToOrder()
         {
             return RedirectToAction("Index","Orders");
@@ -137,6 +212,10 @@ namespace Shop.Areas.admin.Controllers
         public ActionResult RedirectToCategories()
         {
             return RedirectToAction("Index", "Categories");
+        }
+        public ActionResult RedirectToCustomer()
+        {
+            return RedirectToAction("Index", "Customers");
         }
         protected override void Dispose(bool disposing)
         {

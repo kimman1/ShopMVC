@@ -186,17 +186,23 @@ namespace Shop.Areas.admin.Controllers
                    
                     
                 }
+                if (pd.InStock == 0 || pd.InStock < orderViewModel.Quantity)
+                {
+                    ViewBag.ProductIDerror = "Số lượng không đủ đáp ứng!!!";
+                    return View();
+                }
                 else
                 {
                     OrdersDetail odetails = new OrdersDetail();
                     odetails.OrderID = id;
                     odetails.Quantity = orderViewModel.Quantity;
                     odetails.ProductID = product_id;
-                    odetails.Price = pd.UnitPrice*orderViewModel.Quantity;
+                    odetails.Price = pd.UnitPrice * orderViewModel.Quantity;
                     db.OrdersDetails.Add(odetails);
                     od.TongTien = (decimal.Parse(od.TongTien) + orderViewModel.Quantity * pd.UnitPrice).ToString();
+                    pd.InStock = pd.InStock - orderViewModel.Quantity;
                     db.SaveChanges();
-                    return RedirectToAction("Details", new {id = id });
+                    return RedirectToAction("Details", new { id = id });
                 }
 
             }
@@ -234,17 +240,16 @@ namespace Shop.Areas.admin.Controllers
         [ValidateAntiForgeryToken]
         public ActionResult DeleteOrderDetailConfirmed(int Productid, int orderid)
         {
-             Order od = db.Orders.Where(s => s.OrderID == orderid).FirstOrDefault();
-             OrdersDetail p = db.OrdersDetails.Where(s => s.ProductID == Productid && s.OrderID == orderid).FirstOrDefault();
-             Product pd = db.Products.Where(s => s.ProductID == p.ProductID).FirstOrDefault();
-             int orderId = p.OrderID;
-             db.OrdersDetails.Remove(p);
-             db.SaveChanges();
-             od.TongTien = (decimal.Parse( (od.TongTien)) - (pd.UnitPrice * p.Quantity)).ToString();
-             db.Entry(od).State = EntityState.Modified;
-             db.SaveChanges();
-             return RedirectToAction("Details",new {id = orderId});
-            
+            Order od = db.Orders.Where(s => s.OrderID == orderid).FirstOrDefault();
+            OrdersDetail p = db.OrdersDetails.Where(s => s.ProductID == Productid && s.OrderID == orderid).FirstOrDefault();
+            Product pd = db.Products.Where(s => s.ProductID == p.ProductID).FirstOrDefault();
+            int orderId = p.OrderID;
+            db.OrdersDetails.Remove(p);
+            db.SaveChanges();
+            od.TongTien = (decimal.Parse((od.TongTien)) - (pd.UnitPrice * p.Quantity)).ToString();
+            db.Entry(od).State = EntityState.Modified;
+            db.SaveChanges();
+             return RedirectToAction("Details", new { id = orderId });
         }
         protected override void Dispose(bool disposing)
         {

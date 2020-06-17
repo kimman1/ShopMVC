@@ -1,0 +1,65 @@
+﻿@model IEnumerable<Shop.Order>
+
+@{
+    ViewBag.Title = "CusOrder";
+
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<h2>CusOrder</h2>
+
+<p>
+    @Html.ActionLink("Create New", "CreateOrder", new { id = ViewBag.cusID })
+</p>
+<table class="table">
+    <tr>
+        <th>
+            @Html.DisplayNameFor(model => model.TongTien)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.OderDescription)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.OrderDate)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.Customer.Name)
+        </th>
+        <th></th>
+    </tr>
+
+    @foreach (var item in Model)
+    {
+        <tr>
+            <td>
+                @Html.DisplayFor(modelItem => item.TongTien)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.OderDescription)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.OrderDate)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Customer.Name)
+            </td>
+            <td>
+                @Html.ActionLink("Edit", "Edit", new { id = item.OrderID }) |
+                @Html.ActionLink("Details", "OrdersDetails", new { id = item.OrderID }) |
+                @Html.ActionLink("Delete", "Delete", new { id = item.OrderID })
+            </td>
+        </tr>
+    }
+</table>
+<span class="badge badge-success">
+    @Html.ActionLink("Categories", "RedirectToCategories", null, new { @style = "color: white;font-size : 15px" })
+</span>
+<span class="badge badge-warning">
+    @Html.ActionLink("Customer", "RedirectToCustomer", null, new { @style = "color: white;font-size : 15px" })
+</span>
+<span class="badge">
+    @Html.ActionLink("Products", "RedirectToProduct", null, new { @style = "color: white;font-size : 15px" })
+</span>
+<span class="badge">
+    @Html.ActionLink("Orders", "RedirectToOrder", null, new { @style = "color: white;font-size : 15px" })
+</span>

@@ -279,6 +279,8 @@
     <Content Include="Areas\admin\Views\Customers\Index.cshtml" />
     <Content Include="Areas\admin\Views\Orders\DeleteOrderDetail.cshtml" />
     <Content Include="Areas\admin\Views\Problem\Problem.cshtml" />
+    <Content Include="Areas\admin\Views\Customers\CusOrder.cshtml" />
+    <Content Include="Areas\admin\Views\Customers\CreateOrder.cshtml" />
     <None Include="Scripts\jquery-3.3.1.intellisense.js" />
     <Content Include="Scripts\jquery-3.3.1.js" />
     <Content Include="Scripts\jquery-3.3.1.min.js" />
